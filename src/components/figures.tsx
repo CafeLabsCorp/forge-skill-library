@@ -314,20 +314,27 @@ export function ProductBody() {
  * shoulders bust, deliberately distinct from ProductFace's silhouette: only
  * ONE shoulder (screen-left) trails off into a dim ghost node, an unfinished
  * sketch line rather than a symmetric jaw fan. The other shoulder
- * (screen-right) becomes an arm — shoulder -> elbow -> wrist.
+ * (screen-right) becomes an arm — shoulder -> elbow -> wrist. Beret, eyes,
+ * and the left-shoulder trailing ghost are unchanged from the original
+ * round and untouched by the square-gesture rework below.
  *
- * The wrist used to turn a right-angle frame/viewfinder corner (the
- * `.arm-frame` motif echoed at badge scale). Swapped for a small spiral
- * curl echoing DesignBody's round-4 coil hand instead, once that became the
- * approved brush-hand direction — kept deliberately smaller/simpler than the
- * body's 17-segment coil (a single ~300° curl, 7 segments, no flow
- * animation) so the badge stays legible rather than confusing at its much
- * smaller render size; see the DesignBody comment for the coil's origin
- * story. Same halo'd/pulsing tip treatment as before. */
+ * The wrist has gone through two motifs since: first a right-angle frame/
+ * viewfinder corner, then a small spiral curl echoing the body's (since
+ * retired) coil hand. Now it echoes the body's current "large square"
+ * gesture instead (see DesignBody) -- but only a two-solid-side corner of
+ * it, not the full four-sided shape: a full square drawn small enough to
+ * fit a badge either reads as a meaningless tiny box or has to shrink its
+ * line weight/gaps to the point of mush at this render size, whereas a
+ * single solid "L" corner completed by two dashed ghost edges reads
+ * cleanly as "this is a square, mostly implied" even at 70x74 viewBox
+ * units -- the same solid-vs-implied grammar as the body, just cropped to
+ * the one corner that still reads at badge scale. The leading corner
+ * (where the two solid sides meet, i.e. where the "drawing" currently is)
+ * gets the halo'd/pulsing emphasis the wrist tip used to carry. */
 export function DesignFace() {
   return (
     <svg
-      viewBox="44 28 72 70"
+      viewBox="44 26 90 78"
       preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       focusable="false"
@@ -341,15 +348,13 @@ export function DesignFace() {
       {/* right shoulder -> elbow -> wrist */}
       <Edge x1={70} y1={58} x2={88} y2={70} />
       <Edge x1={88} y1={70} x2={104} y2={66} />
-      {/* small spiral curl off the wrist -- badge-scale echo of DesignBody's
-          coil hand, ~300deg sweep over 7 short segments */}
-      <Edge x1={104} y1={66} x2={106} y2={57} />
-      <Edge x1={106} y1={57} x2={106.23} y2={54.33} />
-      <Edge x1={106.23} y1={54.33} x2={103.62} y2={54.62} />
-      <Edge x1={103.62} y1={54.62} x2={101.97} y2={57.35} />
-      <Edge x1={101.97} y1={57.35} x2={103.29} y2={60.87} />
-      <Edge x1={103.29} y1={60.87} x2={107.4} y2={62.22} />
-      <Edge x1={107.4} y1={62.22} x2={111.51} y2={59.57} />
+      {/* small square-corner gesture off the wrist -- badge-scale echo of
+          DesignBody's large square: two solid sides tracing an "L" down and
+          across, closed by two dashed ghost sides implying the rest. */}
+      <Edge x1={104} y1={66} x2={104} y2={84} />
+      <Edge x1={104} y1={84} x2={122} y2={84} />
+      <Edge x1={122} y1={84} x2={122} y2={66} ghost />
+      <Edge x1={122} y1={66} x2={104} y2={66} ghost />
 
       <Node cx={70} cy={58} r={7} variant="head" />
       <Node cx={64} cy={56} r={2} variant="eye" />
@@ -360,70 +365,74 @@ export function DesignFace() {
       <Node cx={50} cy={92} r={2} variant="ghost" />
       <Node cx={88} cy={70} r={3.2} variant="joint" />
       <Node cx={104} cy={66} r={2.5} variant="joint" />
-      <Node cx={111.51} cy={59.57} r={4.5} variant="ghost" />
-      <Node cx={111.51} cy={59.57} r={2.2} variant="pulse-node" />
+      <Node cx={104} cy={84} r={2.4} variant="joint" />
+      <Node cx={122} cy={84} r={2.8} variant="pulse-node" />
+      <Node cx={122} cy={66} r={1.6} variant="ghost" />
     </svg>
   );
 }
 
-/** Full-body graph used in the modal. Deliberately TWO asymmetric arms,
- * ported from the validated design harness (/tmp/design-figure-test.html).
- * The brush hand went through four rounds before landing here — a wedge +
- * hatch head, a square block with ghost-dashed bristles, five jointed
- * fingers with glowing tips — all rejected. Round 4, "spiral / exhaled
- * branch" (/tmp/design-brush-compare/spiral.html), is what's below: the
- * user's own direction ("faça a mão ser um espiral, como se fosse um braço
- * exalando arte, tipo galhos de uma árvore em espiral").
+/** Full-body graph used in the modal. Both hands hold two OPPOSITE corners
+ * of one shared square traced in front of the figure -- Felipe's reference:
+ * "gesto de formar um quadrado grande com as mãos, referência ao símbolo do
+ * Itaú." This replaces a first attempt whose left hand traced most of the
+ * square's own edges (left side + most of the bottom) while the right hand
+ * bent through two extra joints on a diagonal cutting across the square's
+ * interior back up to the top-right corner -- direct feedback from Felipe
+ * after seeing it: "n ficou legal, tem q ser um braço segurando no canto
+ * direito superior e o outro no canto esquerdo inferior, segurando um
+ * quadrado com dois lados com linhas continuas e 2 lados com linhas
+ * dashed." The diagonal-through-the-middle path read as an arm awkwardly
+ * folding across the shape, not two hands cleanly holding two corners.
  *
- * Same limb convention as the Orchestrator / Product (one <g> per arm
- * holding both its nodes and edges, pivoting with `transform-box: view-box`
- * at its true shoulder coordinate) — see the `.arm-brush` / `.arm-frame`
- * rules in globals.css.
+ * This version keeps the square as its own self-contained shape -- exactly
+ * 4 corner nodes, 4 edges -- geometrically separate from the arms. Each arm
+ * is a plain 3-joint path (shoulder -> elbow -> wrist) that terminates AT
+ * one corner and goes no further; the two arm-paths and the square's edges
+ * only ever share coordinates at those two corner points, never cross or
+ * double for one another elsewhere.
  *
- * Brush arm (screen-right): shoulder->elbow->wrist unchanged, then the hand
- * itself is a single coiling line — an Archimedean spiral (constant winding
- * gap at every radius, chosen so the inner turns don't merge into a blob at
- * modal scale) approximated by 17 short `<line>` segments (BRUSH_COIL_SEGMENTS
- * below), with two short twig offshoots and a glowing tip. The whole-arm
- * rigid rotate() sway that drove every earlier round is retired for this
- * one — spinning the coil like that reads as a pinwheel, not something
- * growing — so `.arm-brush` now holds a tame ambient tremor (same register
- * as the sibling `.arm-frame`) while the coil's motion is a continuous
- * `stroke-dashoffset` flow along its own path (the same technique/cost
- * class as the old `.brush-ink` line, just extended across 17
- * phase-staggered segments so it reads as one continuous line of flowing
- * ink rather than 17 dashes blinking independently). Frame arm
- * (screen-left): hand branches into a right-angle L with two dashed ghost
- * edges hinting at a rectangle — an artist's viewfinder/framing gesture,
- * unchanged. */
-// Archimedean spiral (r = r0 + b*t, b = 1.3 -> constant 8.17-unit winding
-// gap at every radius) approximating the brush-hand coil, computed in
-// /tmp/design-brush-compare/geom_spiral_final.py — not eyeballed. Row 0 is
-// the stem (wrist -> spiral pole); rows 1-16 are the coil itself. The 5th
-// tuple entry is each segment's negative animation-delay (seconds),
-// pre-computed as that segment's cumulative distance from the wrist mod
-// the dash-repeat length, so the flow phase-staggers into one continuous
-// traveling mark instead of 17 dashes blinking in sync.
-const BRUSH_COIL_SEGMENTS: Array<[number, number, number, number, number]> = [
-  [168, 40, 179.29, 30.12, -0.0],
-  [182.23, 28.86, 181.5, 26.86, -0.344],
-  [181.5, 26.86, 179.42, 25.44, -0.676],
-  [179.42, 25.44, 176.49, 25.48, -0.07],
-  [176.49, 25.48, 173.77, 27.39, -0.527],
-  [173.77, 27.39, 172.43, 30.88, -0.048],
-  [172.43, 30.88, 173.34, 34.92, -0.632],
-  [173.34, 34.92, 176.64, 38.07, -0.279],
-  [176.64, 38.07, 181.52, 38.97, -0.991],
-  [181.52, 38.97, 186.48, 36.87, -0.768],
-  [186.48, 36.87, 189.71, 32.07, -0.608],
-  [189.71, 32.07, 189.8, 25.86, -0.513],
-  [189.8, 25.86, 186.27, 20.26, -0.482],
-  [186.27, 20.26, 179.89, 17.31, -0.517],
-  [179.89, 17.31, 172.52, 18.37, -0.615],
-  [172.52, 18.37, 166.59, 23.53, -0.779],
-  [166.59, 23.53, 164.31, 31.48, -0.007],
-];
-
+ * Right arm (pivot 134,72) ends at the top-right corner (161,64). Left arm
+ * (pivot 66,72) ends at the bottom-left corner (45,142) -- two opposite
+ * corners, per Felipe's correction. Top-left (45,64) and bottom-right
+ * (161,142) are free-standing, touched by neither arm.
+ *
+ * Solid vs dashed: the LEFT edge and the BOTTOM edge -- the pair that meets
+ * AT the held bottom-left corner -- are solid (fully drawn/committed). The
+ * TOP edge and RIGHT edge -- meeting at the held top-right corner -- are
+ * dashed ghost lines (implied, still being sketched). (Flipped from an
+ * earlier pass that had this backwards -- top+right solid, left+bottom
+ * dashed -- per Felipe's direct correction once he saw it described.)
+ *
+ * The square sits between y=64 (a few px below the neck pulse-node at
+ * y=58, clear of its r=3.5) and y=142 (a few px above the hip pulse-node
+ * at y=150 / hip joints at y=152), spanning x=45-161 -- clear of the legs
+ * (which stay within x=70-138 below y=150). It's 116x78 rather than a
+ * mathematically perfect square, the same clearance trade-off the first
+ * draft of this figure already had to make (that version landed on
+ * ~100x82 for the same reason). The top/bottom edges do cross the torso's
+ * own spine (x=100) since the square spans the torso's full width -- the
+ * same way the earlier version's hand-drawn lines already crossed the
+ * spine without reading as broken.
+ *
+ * Left arm shape: a single elbow at (70,130), bowed toward the torso and
+ * off the square's left edge -- Felipe tried a 4-segment outward hook/loop
+ * variant after this and asked to revert back to this simpler version, so
+ * this is the confirmed shape.
+ *
+ * Both arms are STATIC -- no `.arm-*` rotate class. Reason: each arm's
+ * wrist coordinate IS a square corner shared with two fixed <line> edges
+ * that terminate there; rotating the shoulder pivot would carry that
+ * corner away from those edges, tearing the shape apart every frame (the
+ * same "wrong pivot" bug class the .arm-ul etc. CSS comments warn about,
+ * here triggered by an arm/shape coupling instead of a bad
+ * transform-origin). Life instead comes from `pulse-node` on all 4
+ * corners, staggered 1s apart over the shared 4s cycle in drawing order,
+ * starting and ending at the two held corners: bottom-left (0s) -> top-left
+ * via the solid left edge (1s) -> top-right via the dashed top edge (2s)
+ * -> bottom-right via the dashed right edge (3s) -- looping back to
+ * bottom-left via the solid bottom edge, reading as a glow that
+ * continuously re-traces the square's outline. */
 export function DesignBody() {
   return (
     <svg
@@ -467,81 +476,49 @@ export function DesignBody() {
         <Node cx={70} cy={266} r={4} variant="joint" />
         <Node cx={138} cy={258} r={4} variant="joint" />
 
-        {/* brush arm (screen-right): a single coiling line growing out of
-            the wrist -- read as a branch spiraling outward, ink/energy
-            continuously exhaled along it. Base coil shape is plain static
-            .fig-edge weight (always fully drawn, so the silhouette reads
-            at every animation phase); .brush-coil-flow is a second, thinner
-            dashed line riding the exact same coordinates, carrying the
-            traveling "ink" highlight -- two layers because a single
-            stroke-width-2.75/dasharray-"5 1.4" line was tried first and its
-            round line-caps bulged enough to bridge every gap, making the
-            flow invisible (verified by diffing two dashoffset phases:
-            pixel-identical). The two twigs and coil tip are ghost-halo'd
-            pulse nodes with staggered delays so a pulse visibly travels
-            outward along them. */}
-        <g className="arm-brush">
-          <Edge x1={134} y1={72} x2={152} y2={54} />
-          <Node cx={152} cy={54} r={3.5} />
-          <Edge x1={152} y1={54} x2={168} y2={40} />
-          <Node cx={168} cy={40} r={4.5} />
-
-          <g className="brush-coil-group">
-            {BRUSH_COIL_SEGMENTS.map(([x1, y1, x2, y2], i) => (
-              <line key={`coil-base-${i}`} className="fig-edge" x1={x1} y1={y1} x2={x2} y2={y2} />
-            ))}
-            {BRUSH_COIL_SEGMENTS.map(([x1, y1, x2, y2, delay], i) => (
-              <line
-                key={`coil-flow-${i}`}
-                className="brush-coil-flow"
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                style={{ animationDelay: `${delay}s` }}
-              />
-            ))}
-
-            {/* twig 1: branches off the coil's outer loop, angled into open
-                space -- a first draft sprouting from an inner-loop point
-                landed its tip 3.3 units from the wrist node and visually
-                fused with it; this point clears the wrist by 21.3 units and
-                the nearest coil point by 8.3. */}
-            <line className="fig-edge" x1={186.48} y1={36.87} x2={189.19} y2={42.23} />
-            <Node cx={189.19} cy={42.23} r={5} variant="ghost" />
-            <circle className="fig-node pulse-node" cx={189.19} cy={42.23} r={2.4} style={{ animationDelay: "0.7s" }} />
-
-            {/* twig 2: second branch, outer loop */}
-            <line className="fig-edge" x1={186.27} y1={20.26} x2={187.73} y2={14.96} />
-            <Node cx={187.73} cy={14.96} r={5} variant="ghost" />
-            <circle className="fig-node pulse-node" cx={187.73} cy={14.96} r={2.4} style={{ animationDelay: "1.1s" }} />
-
-            {/* coil tip: the actively-growing point, brightest pulse */}
-            <Node cx={164.31} cy={31.48} r={5.5} variant="ghost" />
-            <circle className="fig-node pulse-node" cx={164.31} cy={31.48} r={3} style={{ animationDelay: "1.6s" }} />
-          </g>
+        {/* Right arm: shoulder -> elbow -> top-right corner (held). Ends
+            exactly at the corner node declared below with the rest of the
+            square -- no extra joints past the elbow, no path across the
+            square's interior. */}
+        <g className="hand-square-right">
+          <Edge x1={134} y1={72} x2={145} y2={120} />
+          <Node cx={145} cy={120} r={3.5} />
+          <Edge x1={145} y1={120} x2={161} y2={64} />
         </g>
 
-        {/* frame arm (screen-left): hand held in an L / viewfinder-corner
-            gesture, ghost edges hinting at the rest of a composition
-            rectangle not yet solid. */}
-        <g className="arm-frame">
-          <Edge x1={66} y1={72} x2={48} y2={88} />
-          <Node cx={48} cy={88} r={3.5} />
-          <Edge x1={48} y1={88} x2={54} y2={64} />
-          <Node cx={54} cy={64} r={4} />
-          <Edge x1={54} y1={64} x2={54} y2={46} />
-          <Node cx={54} cy={46} r={2.2} />
-          <Edge x1={54} y1={64} x2={78} y2={64} />
-          <Node cx={78} cy={64} r={2.2} />
-          <Edge x1={54} y1={46} x2={78} y2={46} ghost />
-          <Edge x1={78} y1={64} x2={78} y2={46} ghost />
-          <Node cx={78} cy={46} r={1.6} variant="ghost" />
+        {/* Left arm: shoulder -> elbow -> bottom-left corner (held). Same
+            shape as the right arm: one elbow, then straight to its corner. */}
+        <g className="hand-square-left">
+          <Edge x1={66} y1={72} x2={70} y2={130} />
+          <Node cx={70} cy={130} r={3.5} />
+          <Edge x1={70} y1={130} x2={45} y2={142} />
+        </g>
+
+        {/* The square: 4 corners, 4 edges, self-contained. Left + bottom are
+            solid (the pair meeting at the held bottom-left corner); top +
+            right are dashed ghost (the pair meeting at the held top-right
+            corner). Corner pulse-nodes stagger 1s apart in drawing order:
+            bottom-left -> top-left -> top-right -> bottom-right. The whole
+            shape is wrapped in `.square-breathe` -- a subtle independent
+            grow/shrink + rise/fall, on the same rhythm as `.figure-group`'s
+            own breathe but offset by its own animation-delay so the square
+            doesn't move in lockstep with the body (see globals.css). */}
+        <g className="square-breathe">
+          <Edge x1={45} y1={64} x2={161} y2={64} ghost />
+          <Edge x1={161} y1={64} x2={161} y2={142} ghost />
+          <Edge x1={161} y1={142} x2={45} y2={142} />
+          <Edge x1={45} y1={142} x2={45} y2={64} />
+
+          <circle className="fig-node pulse-node" cx={45} cy={142} r={4.5} style={{ animationDelay: "0s" }} />
+          <circle className="fig-node pulse-node" cx={45} cy={64} r={4.5} style={{ animationDelay: "1s" }} />
+          <circle className="fig-node pulse-node" cx={161} cy={64} r={4.5} style={{ animationDelay: "2s" }} />
+          <circle className="fig-node pulse-node" cx={161} cy={142} r={4.5} style={{ animationDelay: "3s" }} />
         </g>
       </g>
     </svg>
   );
 }
+
 /** Small "face" graph used on the badge card. Mobile's distinguishing prop
  * (analogous to Orchestrator's triple crest, Product's asymmetric brow,
  * Design's beret) is a centered antenna/status-light stalk rising off the
