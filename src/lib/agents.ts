@@ -69,8 +69,9 @@ const AGENT_CONFIGS: AgentConfig[] = [
   { id: "devops", num: "07", role: "CI/CD / Infra", accentVar: "--devops" },
   { id: "qa", num: "08", role: "Testing", accentVar: "--qa" },
   { id: "security", num: "09", role: "Independent Review", accentVar: "--security" },
-  { id: "analytics", num: "10", role: "Instrumentation", accentVar: "--analytics" },
-  { id: "docs", num: "11", role: "Documentation", accentVar: "--docs" },
+  { id: "compliance", num: "10", role: "Legal / Privacy / LGPD", accentVar: "--compliance" },
+  { id: "analytics", num: "11", role: "Instrumentation", accentVar: "--analytics" },
+  { id: "docs", num: "12", role: "Documentation", accentVar: "--docs" },
 ];
 
 // Naive kebab-case -> Title Case can't know "qa" and "devops" are meant as
@@ -122,7 +123,8 @@ async function fetchAgent(config: AgentConfig): Promise<AgentCardData> {
         config.id === "orchestrator" ||
         config.id === "product" ||
         config.id === "design" ||
-        config.id === "mobile",
+        config.id === "mobile" ||
+        config.id === "backend",
       unavailable: false,
       content: raw.trim(),
       sourcePath,

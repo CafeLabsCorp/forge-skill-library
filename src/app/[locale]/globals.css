@@ -21,6 +21,7 @@
   --devops: 220 14% 62%;
   --qa: 15 78% 56%;
   --security: 355 62% 50%;
+  --compliance: 65 70% 55%;
   --analytics: 275 58% 66%;
   --docs: 100 38% 52%;
 
@@ -1004,6 +1005,13 @@ a {
     transform: scale(1.035) translateY(-2.5px);
   }
 }
+
+/* Backend's 4 arms reuse Orchestrator's arm-ul/ur/ll/lr rules above
+   directly (see BackendBody in figures.tsx) -- same 4 pivot points, so no
+   separate rules are needed here. Each arm's held object lives inside the
+   same rotating `<g>` as its arm, not as a fixed shape outside it, so
+   nothing tears apart the way Design's hands or the discarded 3rd pass's
+   crossed arms had to design around. */
 
 .pulse-node {
   animation: pulse 4s ease-in-out infinite;
