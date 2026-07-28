@@ -880,12 +880,151 @@ export function BackendBody() {
   );
 }
 
+/** Small "face" graph used on the badge card. Badge-scale echo of
+ * FrontendWebBody's tag-bracket torso -- same two brackets, no crest (the
+ * confirmed direction never had one), cropped at the shoulders like every
+ * other face. */
+export function FrontendWebFace() {
+  return (
+    <svg viewBox="40 20 60 78" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      <Node cx={70} cy={58} r={7} variant="head" />
+      <Node cx={64} cy={56} r={2} variant="eye" />
+      <Node cx={76} cy={56} r={2} variant="eye" />
+      <Edge x1={70} y1={58} x2={70} y2={74} />
+      <Node cx={70} cy={74} r={2.8} variant="pulse-node" />
+
+      <Edge x1={60} y1={64} x2={52} y2={78} />
+      <Edge x1={52} y1={78} x2={60} y2={92} />
+      <Edge x1={80} y1={64} x2={88} y2={78} />
+      <Edge x1={88} y1={78} x2={80} y2={92} />
+      <Node cx={52} cy={78} r={1.8} variant="pulse-node" />
+      <Node cx={88} cy={78} r={1.8} variant="pulse-node" />
+
+      <Edge x1={70} y1={74} x2={60} y2={64} />
+      <Edge x1={70} y1={74} x2={80} y2={64} />
+      <Node cx={60} cy={64} r={3.2} variant="joint" />
+      <Node cx={80} cy={64} r={3.2} variant="joint" />
+    </svg>
+  );
+}
+
+/** Full-body graph used in the modal. First pass, confirmed by Felipe --
+ * but two earlier directions were tried and dropped first:
+ *
+ * v1: a browser-window crest (tab + chrome bar + address-bar pill) above
+ * the head, plain torso. Felipe: "parece uma impressora" -- the
+ * nested-rectangle chrome bar read as a printer's paper slot once shrunk to
+ * crest scale, not a browser.
+ *
+ * v2: same crest redrawn without the 3-dot "traffic light" row (which read
+ * as generic app/terminal chrome, not specifically web) -- still didn't
+ * land. The printer read survived because the problem was the boxy
+ * chrome-bar shape itself, not the dots.
+ *
+ * v3 (this one) drops the crest entirely -- the same lesson BackendBody's
+ * ribcage already taught: one strong motif beats a hat bolted onto an
+ * otherwise plain body. The torso becomes two large tag brackets (`<` `>`)
+ * cradling the ribcage from inside the exact shoulder/hip attachment
+ * points every other figure uses, with a small dashed "blinking cursor"
+ * hinting at content between them. The feet pick up the same bracket angle
+ * at a smaller scale, so the whole figure reads head-to-toe as one idea --
+ * a body built out of markup -- instead of stitching an unrelated crest to
+ * an unrelated foot detail.
+ *
+ * Arms: plain shoulder -> elbow -> wrist, reusing Orchestrator's arm-ul/
+ * arm-ur pivot and sway (66,72)/(134,72) unchanged -- same restraint
+ * Backend's arms landed on. Lengthened past the first draft on Felipe's
+ * request, wrist reaching to about waist height (134) instead of stopping
+ * mid-torso (120).
+ *
+ * Head/neck/shoulders/hips/thighs/knees unchanged from every other figure
+ * -- only the torso interior and the feet diverge. */
+export function FrontendWebBody() {
+  return (
+    <svg viewBox="0 -20 212 312" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      <g className="figure-group">
+        {/* head + neck */}
+        <Edge x1={100} y1={38} x2={100} y2={58} />
+        <Node cx={100} cy={38} r={6.5} variant="head" />
+        <Node cx={94} cy={36} r={2} variant="eye" />
+        <Node cx={106} cy={36} r={2} variant="eye" />
+        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
+
+        {/* torso: two tag brackets inside the standard shoulder/hip width,
+            plus a dashed "blinking cursor" hinting at content between them */}
+        <Edge x1={84} y1={64} x2={74} y2={86} />
+        <Edge x1={74} y1={86} x2={84} y2={108} />
+        <Edge x1={116} y1={64} x2={126} y2={86} />
+        <Edge x1={126} y1={86} x2={116} y2={108} />
+        <Node cx={74} cy={86} r={2.2} variant="pulse-node" />
+        <Node cx={126} cy={86} r={2.2} variant="pulse-node" />
+        <Edge x1={100} y1={76} x2={100} y2={94} ghost />
+        <Node cx={100} cy={94} r={1.6} variant="ghost" />
+
+        {/* shoulders + hips -- shared skeleton, unchanged from every other figure */}
+        <Edge x1={100} y1={58} x2={100} y2={82} />
+        <Edge x1={100} y1={82} x2={66} y2={72} />
+        <Edge x1={100} y1={82} x2={134} y2={72} />
+        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={66} cy={72} r={4.5} variant="joint" />
+        <Node cx={134} cy={72} r={4.5} variant="joint" />
+        <Edge x1={100} y1={82} x2={100} y2={112} />
+        <Edge x1={100} y1={112} x2={62} y2={108} />
+        <Edge x1={100} y1={112} x2={138} y2={108} />
+        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={62} cy={108} r={4.5} variant="joint" />
+        <Node cx={138} cy={108} r={4.5} variant="joint" />
+
+        {/* pelvis -> thighs -> knees -- shared skeleton */}
+        <Edge x1={100} y1={112} x2={100} y2={150} />
+        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Edge x1={100} y1={150} x2={86} y2={152} />
+        <Edge x1={100} y1={150} x2={114} y2={152} />
+        <Node cx={86} cy={152} r={3.5} variant="joint" />
+        <Node cx={114} cy={152} r={3.5} variant="joint" />
+        <Edge x1={86} y1={152} x2={80} y2={215} />
+        <Edge x1={114} y1={152} x2={120} y2={215} />
+        <Node cx={80} cy={215} r={3.5} variant="joint" />
+        <Node cx={120} cy={215} r={3.5} variant="joint" />
+
+        {/* shins -> tag feet: same bracket angle as the torso, smaller scale */}
+        <Edge x1={80} y1={215} x2={78} y2={255} />
+        <Edge x1={78} y1={255} x2={60} y2={268} />
+        <Edge x1={60} y1={268} x2={78} y2={280} />
+        <Node cx={60} cy={268} r={2.2} variant="pulse-node" />
+        <Node cx={78} cy={280} r={3.5} variant="joint" />
+        <Edge x1={120} y1={215} x2={122} y2={255} />
+        <Edge x1={122} y1={255} x2={140} y2={268} />
+        <Edge x1={140} y1={268} x2={122} y2={280} />
+        <Node cx={140} cy={268} r={2.2} variant="pulse-node" />
+        <Node cx={122} cy={280} r={3.5} variant="joint" />
+
+        {/* two neutral arms, reusing Orchestrator's arm-ul/arm-ur pivot + sway,
+            lengthened to reach about waist height */}
+        <g className="arm-ul">
+          <Edge x1={66} y1={72} x2={48} y2={100} />
+          <Node cx={48} cy={100} r={3} variant="joint" />
+          <Edge x1={48} y1={100} x2={52} y2={134} />
+          <Node cx={52} cy={134} r={3} variant="joint" />
+        </g>
+        <g className="arm-ur">
+          <Edge x1={134} y1={72} x2={152} y2={100} />
+          <Node cx={152} cy={100} r={3} variant="joint" />
+          <Edge x1={152} y1={100} x2={148} y2={134} />
+          <Node cx={148} cy={134} r={3} variant="joint" />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
 const READY_FACES: Record<string, () => JSX.Element> = {
   orchestrator: OrchestratorFace,
   product: ProductFace,
   design: DesignFace,
   mobile: MobileFace,
   backend: BackendFace,
+  "frontend-web": FrontendWebFace,
 };
 
 const READY_BODIES: Record<string, () => JSX.Element> = {
@@ -894,6 +1033,7 @@ const READY_BODIES: Record<string, () => JSX.Element> = {
   design: DesignBody,
   mobile: MobileBody,
   backend: BackendBody,
+  "frontend-web": FrontendWebBody,
 };
 
 /** Looks up the card/modal figure components for a given agent id. Callers
