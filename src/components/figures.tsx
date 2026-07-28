@@ -1018,6 +1018,178 @@ export function FrontendWebBody() {
   );
 }
 
+/** Small "face" graph used on the badge card. Badge-scale echo of
+ * DevOpsBody's gear crest + single asymmetric cycle-loop torso, cropped at
+ * the shoulders like every other face -- no arms (there's no room to imply
+ * the asymmetric raised-arm pose at badge scale without it just reading as
+ * noise), the crest and loop alone carry the identity here. */
+export function DevOpsFace() {
+  return (
+    <svg viewBox="51 -4 44 108" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      {/* gear crest */}
+      <circle className="fig-loop" cx={70} cy={16} r={6} />
+      <Node cx={70} cy={16} r={1.3} variant="pulse-node" />
+      <Edge x1={70} y1={10} x2={70} y2={6} />
+      <Node cx={70} cy={6} r={1.1} variant="joint" />
+      <Edge x1={64} y1={16} x2={60} y2={16} />
+      <Node cx={60} cy={16} r={1.1} variant="joint" />
+      <Edge x1={76} y1={16} x2={80} y2={16} />
+      <Node cx={80} cy={16} r={1.1} variant="joint" />
+      <Edge x1={70} y1={22} x2={70} y2={58} />
+
+      {/* head + neck */}
+      <Node cx={70} cy={58} r={7} variant="head" />
+      <Node cx={64} cy={56} r={2} variant="eye" />
+      <Node cx={76} cy={56} r={2} variant="eye" />
+      <Edge x1={70} y1={58} x2={70} y2={72} />
+      <Node cx={70} cy={72} r={2.6} variant="pulse-node" />
+
+      {/* single asymmetric cycle-loop torso, badge scale */}
+      <path className="fig-loop" d="M 67.9 91.8 A 12 12 0 1 1 81.3 84.1" />
+      <Edge x1={81.3} y1={84.1} x2={79.6} y2={79.4} />
+      <Edge x1={81.3} y1={84.1} x2={85.6} y2={81.6} />
+      <Node cx={67.9} cy={91.8} r={1.6} variant="pulse-node" />
+      <Node cx={81.3} cy={84.1} r={1.2} variant="joint" />
+
+      {/* shoulder hint */}
+      <Edge x1={70} y1={72} x2={60} y2={64} />
+      <Edge x1={70} y1={72} x2={80} y2={64} />
+      <Node cx={60} cy={64} r={3} variant="joint" />
+      <Node cx={80} cy={64} r={3} variant="joint" />
+    </svg>
+  );
+}
+
+/** Full-body graph used in the modal. First pass, confirmed by Felipe --
+ * but only after two rounds of "this still looks like the others":
+ *
+ * v1 was the classic infinity symbol -- two same-size circles overlapping
+ * at the torso center, both arms hanging in the exact same neutral pose
+ * BackendBody/FrontendWebBody already use, no crest. Felipe: "vc ta
+ * seguindo um padrão" -- arms in the same position, torso always two
+ * symmetric halves meeting in the middle (rings for Backend, brackets for
+ * Frontend, now circles for DevOps), heads all identical. The complaint
+ * wasn't wrong: swapping the icon inside an otherwise-identical torso slot
+ * isn't individuality, it's a template.
+ *
+ * v2 added a gear crest (its own shape, not a repeat of the earlier
+ * browser-window mistake) and broke the mirrored arm pose: right arm
+ * raised, reaching via a dashed edge toward a pulsing status-beacon node --
+ * reusing ProductBody's "point at, don't hold" idiom for the riskiest
+ * assumption, applied here to monitoring/alerting (one of the domain's own
+ * four pillars, see devops.md). Left arm relaxed at its own angle, not a
+ * mirror of the right. Still not enough -- Felipe: torso and arms both
+ * still read short/similar.
+ *
+ * v3 (this one): the torso itself stopped being two mirrored halves. It's
+ * one continuous circular arc with a visible start and a visible
+ * arrowhead end -- a "refresh"/cycle glyph, asymmetric by construction,
+ * impossible to confuse with BackendBody's stacked rings or
+ * FrontendWebBody's two brackets. Both arms lengthened noticeably past v2.
+ * One more round of feedback: the near-horizontal hip-to-joint edges
+ * (100,112)->(62,108)/(138,108) read as two flat rods sitting inside the
+ * torso -- given a slight downward bend at their midpoint so they don't
+ * compete with the loop's own horizontal reach. (An earlier guess bent the
+ * shoulder edges instead -- wrong pair, reverted; the hip edges were the
+ * ones Felipe meant.)
+ *
+ * Head/neck/shoulders/hips/thighs/knees/feet unchanged from every other
+ * figure -- individuality here lives in the crest, the torso, and the
+ * pose, not in re-deriving the whole skeleton. */
+export function DevOpsBody() {
+  return (
+    <svg viewBox="10 -20 200 320" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      <g className="figure-group">
+        {/* gear crest */}
+        <circle className="fig-loop" cx={100} cy={18} r={7} />
+        <Node cx={100} cy={18} r={1.5} variant="pulse-node" />
+        <Edge x1={100} y1={11} x2={100} y2={7} />
+        <Node cx={100} cy={7} r={1.3} variant="joint" />
+        <Edge x1={93} y1={18} x2={89} y2={18} />
+        <Node cx={89} cy={18} r={1.3} variant="joint" />
+        <Edge x1={107} y1={18} x2={111} y2={18} />
+        <Node cx={111} cy={18} r={1.3} variant="joint" />
+        <Edge x1={100} y1={25} x2={100} y2={32} />
+
+        {/* head + neck */}
+        <Node cx={100} cy={38} r={6.5} variant="head" />
+        <Node cx={94} cy={36} r={2} variant="eye" />
+        <Node cx={106} cy={36} r={2} variant="eye" />
+        <Edge x1={100} y1={38} x2={100} y2={58} />
+        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
+        <Edge x1={100} y1={58} x2={100} y2={82} />
+
+        {/* torso: single asymmetric cycle-loop -- a "refresh" arrow, not
+            two mirrored halves */}
+        <path className="fig-loop" d="M 96.2 106.7 A 22 22 0 1 1 120.7 92.5" />
+        <Edge x1={120.7} y1={92.5} x2={118.3} y2={85.9} />
+        <Edge x1={120.7} y1={92.5} x2={126.7} y2={89.0} />
+        <Node cx={96.2} cy={106.7} r={2.4} variant="pulse-node" />
+        <Node cx={120.7} cy={92.5} r={1.8} variant="joint" />
+
+        {/* shoulders -- shared skeleton, unchanged */}
+        <Edge x1={100} y1={82} x2={66} y2={72} />
+        <Edge x1={100} y1={82} x2={134} y2={72} />
+        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={66} cy={72} r={4.5} variant="joint" />
+        <Node cx={134} cy={72} r={4.5} variant="joint" />
+
+        {/* hips -- shared skeleton, with a slight downward bend at the
+            midpoint of each edge so they don't read as two flat rods */}
+        <Edge x1={100} y1={82} x2={100} y2={112} />
+        <Edge x1={100} y1={112} x2={80} y2={116} />
+        <Edge x1={80} y1={116} x2={62} y2={108} />
+        <Edge x1={100} y1={112} x2={120} y2={116} />
+        <Edge x1={120} y1={116} x2={138} y2={108} />
+        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={62} cy={108} r={4.5} variant="joint" />
+        <Node cx={138} cy={108} r={4.5} variant="joint" />
+
+        {/* pelvis -> legs -> feet -- shared skeleton, unchanged */}
+        <Edge x1={100} y1={112} x2={100} y2={150} />
+        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Edge x1={100} y1={150} x2={86} y2={152} />
+        <Edge x1={100} y1={150} x2={114} y2={152} />
+        <Node cx={86} cy={152} r={3.5} variant="joint" />
+        <Node cx={114} cy={152} r={3.5} variant="joint" />
+        <Edge x1={86} y1={152} x2={80} y2={215} />
+        <Edge x1={80} y1={215} x2={75} y2={278} />
+        <Edge x1={114} y1={152} x2={120} y2={215} />
+        <Edge x1={120} y1={215} x2={125} y2={278} />
+        <Node cx={80} cy={215} r={3.5} variant="joint" />
+        <Node cx={120} cy={215} r={3.5} variant="joint" />
+        <Node cx={75} cy={278} r={4} variant="joint" />
+        <Node cx={125} cy={278} r={4} variant="joint" />
+
+        {/* left arm: relaxed, own angle, lengthened to waist -- wrapped in
+            arm-ul for the same subtle sway every other figure's arms get,
+            pivoting at the real shoulder joint like all the others */}
+        <g className="arm-ul">
+          <Edge x1={66} y1={72} x2={50} y2={100} />
+          <Node cx={50} cy={100} r={3} variant="joint" />
+          <Edge x1={50} y1={100} x2={54} y2={134} />
+          <Node cx={54} cy={134} r={3} variant="joint" />
+        </g>
+
+        {/* right arm: raised, reaching (not holding) toward a pulsing
+            status beacon -- ProductBody's "point at the riskiest
+            assumption" idiom, applied to monitoring. Beacon lives inside
+            the same arm-ur group as the arm, so it sways rigidly with the
+            reach instead of tearing away from it. */}
+        <g className="arm-ur">
+          <Edge x1={134} y1={72} x2={152} y2={52} />
+          <Node cx={152} cy={52} r={3.2} variant="joint" />
+          <Edge x1={152} y1={52} x2={166} y2={30} />
+          <Node cx={166} cy={30} r={3} variant="joint" />
+          <Edge x1={166} y1={30} x2={178} y2={20} ghost />
+          <Node cx={178} cy={20} r={5} variant="ghost" />
+          <Node cx={178} cy={20} r={2.2} variant="pulse-node" />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
 const READY_FACES: Record<string, () => JSX.Element> = {
   orchestrator: OrchestratorFace,
   product: ProductFace,
@@ -1025,6 +1197,7 @@ const READY_FACES: Record<string, () => JSX.Element> = {
   mobile: MobileFace,
   backend: BackendFace,
   "frontend-web": FrontendWebFace,
+  devops: DevOpsFace,
 };
 
 const READY_BODIES: Record<string, () => JSX.Element> = {
@@ -1034,6 +1207,7 @@ const READY_BODIES: Record<string, () => JSX.Element> = {
   mobile: MobileBody,
   backend: BackendBody,
   "frontend-web": FrontendWebBody,
+  devops: DevOpsBody,
 };
 
 /** Looks up the card/modal figure components for a given agent id. Callers
