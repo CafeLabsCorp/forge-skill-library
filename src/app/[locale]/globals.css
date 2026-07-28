@@ -858,6 +858,20 @@ a {
   opacity: 0.35;
 }
 
+/* BackendBody/BackendFace's stacked-rib torso (the `Rib` primitive in
+   figures.tsx) -- same stroke treatment as .fig-edge, kept as its own class
+   since a <path> arc isn't a <line>. .cap gets a touch heavier stroke for
+   the top/bottom rings of the stack, echoing the emphasized rim of a real
+   stacked-disc cylinder icon. */
+.fig-rib {
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+.fig-rib.cap {
+  stroke-width: 2.2;
+}
+
 .figure-group {
   transform-box: fill-box;
   transform-origin: 50% 55%;
@@ -1006,12 +1020,12 @@ a {
   }
 }
 
-/* Backend's 4 arms reuse Orchestrator's arm-ul/ur/ll/lr rules above
-   directly (see BackendBody in figures.tsx) -- same 4 pivot points, so no
-   separate rules are needed here. Each arm's held object lives inside the
-   same rotating `<g>` as its arm, not as a fixed shape outside it, so
-   nothing tears apart the way Design's hands or the discarded 3rd pass's
-   crossed arms had to design around. */
+/* Backend's 2 arms reuse Orchestrator's arm-ul/arm-ur rules above directly
+   (see BackendBody in figures.tsx) -- same 2 shoulder pivots, same sway, no
+   held object and no separate rules needed here. An earlier 4-armed pass
+   (holding a database cylinder, key, table, and record stack, one per
+   Orchestrator's 4 pivots) was discarded in favor of this plainer version
+   once the ribcage torso became the figure's actual identity. */
 
 .pulse-node {
   animation: pulse 4s ease-in-out infinite;
