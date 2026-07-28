@@ -158,6 +158,6 @@ C") localizada corretamente sem hardcodar o conectivo.
   try/catch individual) é uma escolha explícita para que uma instabilidade pontual do
   GitHub raw content não derrube a página toda — só degrada o(s) card(s) afetado(s).
 - **`ready` é um interruptor manual neste repo, não uma propriedade do agente no repo
-  `forge`.** Hoje só 3 dos 11 agentes estão marcados como prontos; os outros existem no
+  `forge`.** Hoje só 3 dos 12 agentes estão marcados como prontos; os outros existem no
   Forge mas ainda não têm o tratamento visual (figura própria) nem foram "aprovados" para
   mostrar o prompt completo aqui.

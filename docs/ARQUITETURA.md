@@ -157,6 +157,6 @@ C") correctly localized without hardcoding the connective.
   individual try/catch) is an explicit choice so that a temporary GitHub raw content
   instability doesn't take down the whole page — it only degrades the affected card(s).
 - **`ready` is a manual switch in this repo, not a property of the agent in the
-  `forge` repo.** Today only 3 of the 11 agents are marked as ready; the others exist in
+  `forge` repo.** Today only 3 of the 12 agents are marked as ready; the others exist in
   Forge but don't yet have the visual treatment (a dedicated figure) nor have been "approved" to
   show the full prompt here.
