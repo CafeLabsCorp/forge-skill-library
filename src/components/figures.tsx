@@ -1027,7 +1027,7 @@ export function DevOpsFace() {
   return (
     <svg viewBox="51 -4 44 108" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
       {/* gear crest */}
-      <circle className="fig-loop" cx={70} cy={16} r={6} />
+      <circle className="fig-loop" cx={70} cy={16} r={6} fill="none" />
       <Node cx={70} cy={16} r={1.3} variant="pulse-node" />
       <Edge x1={70} y1={10} x2={70} y2={6} />
       <Node cx={70} cy={6} r={1.1} variant="joint" />
@@ -1045,7 +1045,7 @@ export function DevOpsFace() {
       <Node cx={70} cy={72} r={2.6} variant="pulse-node" />
 
       {/* single asymmetric cycle-loop torso, badge scale */}
-      <path className="fig-loop" d="M 67.9 91.8 A 12 12 0 1 1 81.3 84.1" />
+      <path className="fig-loop" d="M 67.9 91.8 A 12 12 0 1 1 81.3 84.1" fill="none" />
       <Edge x1={81.3} y1={84.1} x2={79.6} y2={79.4} />
       <Edge x1={81.3} y1={84.1} x2={85.6} y2={81.6} />
       <Node cx={67.9} cy={91.8} r={1.6} variant="pulse-node" />
@@ -1101,7 +1101,7 @@ export function DevOpsBody() {
     <svg viewBox="10 -20 200 320" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
       <g className="figure-group">
         {/* gear crest */}
-        <circle className="fig-loop" cx={100} cy={18} r={7} />
+        <circle className="fig-loop" cx={100} cy={18} r={7} fill="none" />
         <Node cx={100} cy={18} r={1.5} variant="pulse-node" />
         <Edge x1={100} y1={11} x2={100} y2={7} />
         <Node cx={100} cy={7} r={1.3} variant="joint" />
@@ -1121,7 +1121,7 @@ export function DevOpsBody() {
 
         {/* torso: single asymmetric cycle-loop -- a "refresh" arrow, not
             two mirrored halves */}
-        <path className="fig-loop" d="M 96.2 106.7 A 22 22 0 1 1 120.7 92.5" />
+        <path className="fig-loop" d="M 96.2 106.7 A 22 22 0 1 1 120.7 92.5" fill="none" />
         <Edge x1={120.7} y1={92.5} x2={118.3} y2={85.9} />
         <Edge x1={120.7} y1={92.5} x2={126.7} y2={89.0} />
         <Node cx={96.2} cy={106.7} r={2.4} variant="pulse-node" />
