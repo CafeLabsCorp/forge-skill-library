@@ -55,6 +55,27 @@ function Node({
   return <circle className={`fig-node${variant ? ` ${variant}` : ""}`} cx={cx} cy={cy} r={r} />;
 }
 
+/** A shallow horizontal arc from (x1,y) to (x2,y), bowing down by `bow` at
+ * its midpoint. Introduced for BackendBody/BackendFace's stacked-rib torso
+ * (see their doc comments) — the only figure whose torso isn't the shared
+ * straight spine, so this is the one primitive Edge/Node can't express. */
+function Rib({
+  x1,
+  y,
+  x2,
+  bow,
+  cap,
+}: {
+  x1: number;
+  y: number;
+  x2: number;
+  bow: number;
+  cap?: boolean;
+}) {
+  const midX = (x1 + x2) / 2;
+  return <path className={`fig-rib${cap ? " cap" : ""}`} d={`M ${x1} ${y} Q ${midX} ${y + bow} ${x2} ${y}`} />;
+}
+
 /** Small "face" graph used on the badge card (10-12 nodes). Only the
  * orchestrator has one this round. */
 export function OrchestratorFace() {
@@ -719,11 +740,152 @@ export function MobileBody() {
   );
 }
 
+/** Small "face" graph used on the badge card. Fifth pass — confirmed. See
+ * BackendBody's doc comment for the full history (four discarded attempts,
+ * the last one 4-armed) and the ribcage concept. This is that same idea at
+ * badge scale: 2 stacked ribs instead of 4 (a badge doesn't have the height
+ * for more and still read as ribs, not stripes), no crest, no held object —
+ * bust-only like every other face, the ribcage alone is the accent. */
+export function BackendFace() {
+  return (
+    <svg
+      viewBox="42 26 56 70"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {/* head + neck */}
+      <Edge x1={70} y1={58} x2={70} y2={76} />
+      <Node cx={70} cy={58} r={7} variant="head" />
+      <Node cx={64} cy={56} r={2} variant="eye" />
+      <Node cx={76} cy={56} r={2} variant="eye" />
+      <Node cx={70} cy={76} r={2.6} variant="pulse-node" />
+
+      {/* ribcage: 2 stacked arcs, sides connecting their endpoints */}
+      <Rib x1={58} y={79} x2={82} bow={5} cap />
+      <Rib x1={55} y={90} x2={85} bow={5} cap />
+      <Edge x1={58} y1={79} x2={55} y2={90} />
+      <Edge x1={82} y1={79} x2={85} y2={90} />
+      <Node cx={70} cy={84} r={1.6} variant="joint" />
+      <Node cx={70} cy={95} r={3} variant="pulse-node" />
+    </svg>
+  );
+}
+
+/** Full-body graph used in the modal. Fifth pass — confirmed by Felipe
+ * ("gostei do 2") after a side-by-side comparison. The first four attempts
+ * (padlock; block+ziggurat; database-cylinder-legs + server-chassis torso +
+ * crossed arms; then a 4-armed gesture holding a database cylinder, key,
+ * table, and record stack) all got cut — the 4-arm version in particular
+ * re-skinned Orchestrator's own conducting gesture instead of giving
+ * Backend its own identity, and broke the "2 arms unless there's a specific
+ * reason for 4" pattern every other figure holds to.
+ *
+ * Felipe's reference for this round: the database-cylinder icon itself
+ * (stacked discs) — not as a held prop or a leg shape this time, but *as
+ * the torso*: "as costelas do humanoide". Torso is 4 stacked horizontal
+ * arcs (`Rib`, the one primitive besides Edge/Node this file needs) instead
+ * of the straight spine every other figure uses, each arc bowing downward
+ * like one ring of the cylinder. The side edges connect each arc's
+ * endpoints to the next rather than running two straight barrel walls, so
+ * the shape reads as ribs that happen to echo a cylinder, not a rigid
+ * cylinder dropped onto a body. The 2nd and 4th arcs deliberately bow
+ * through (100,82)/(100,112) — the exact torso/hip pulse-nodes every other
+ * figure's shoulders/hips already branch from — so the ribcage doesn't add
+ * new skeleton, it re-draws the existing one.
+ *
+ * Arms: back to 2, reusing Orchestrator's own arm-ul/arm-ur pivots and sway
+ * unchanged (66,72)/(134,72) — plain shoulder -> elbow -> wrist, no held
+ * object. Chosen over a "holds a key" variant compared side by side: with
+ * the ribcage carrying the identity, a held object read as one accent too
+ * many.
+ *
+ * Head/neck/hips/legs unchanged from Orchestrator/Product/Mobile. */
+export function BackendBody() {
+  return (
+    <svg
+      viewBox="0 -20 212 312"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g className="figure-group">
+        {/* head + neck */}
+        <Edge x1={100} y1={38} x2={100} y2={58} />
+        <Node cx={100} cy={38} r={6.5} variant="head" />
+        <Node cx={94} cy={36} r={2} variant="eye" />
+        <Node cx={106} cy={36} r={2} variant="eye" />
+        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
+
+        {/* ribcage: 4 stacked arcs, sides connecting consecutive endpoints.
+            2nd/4th arcs bow exactly through the shared torso/hip
+            pulse-nodes below, so shoulders/hips still branch from the same
+            coordinates every other figure uses. */}
+        <Rib x1={82} y={62} x2={118} bow={6} cap />
+        <Rib x1={78} y={76} x2={122} bow={6} />
+        <Rib x1={80} y={92} x2={120} bow={6} />
+        <Rib x1={76} y={104} x2={124} bow={8} cap />
+        <Edge x1={82} y1={62} x2={78} y2={76} />
+        <Edge x1={78} y1={76} x2={80} y2={92} />
+        <Edge x1={80} y1={92} x2={76} y2={104} />
+        <Edge x1={118} y1={62} x2={122} y2={76} />
+        <Edge x1={122} y1={76} x2={120} y2={92} />
+        <Edge x1={120} y1={92} x2={124} y2={104} />
+        <Node cx={100} cy={68} r={2} variant="joint" />
+        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={98} r={2} variant="joint" />
+        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+
+        {/* shoulders + hips + legs -- shared skeleton, unchanged from
+            Orchestrator/Product/Mobile */}
+        <Edge x1={100} y1={82} x2={66} y2={72} />
+        <Edge x1={100} y1={82} x2={134} y2={72} />
+        <Node cx={66} cy={72} r={4.5} variant="joint" />
+        <Node cx={134} cy={72} r={4.5} variant="joint" />
+        <Edge x1={100} y1={112} x2={62} y2={108} />
+        <Edge x1={100} y1={112} x2={138} y2={108} />
+        <Node cx={62} cy={108} r={4.5} variant="joint" />
+        <Node cx={138} cy={108} r={4.5} variant="joint" />
+        <Edge x1={100} y1={112} x2={100} y2={150} />
+        <Edge x1={100} y1={150} x2={86} y2={152} />
+        <Edge x1={100} y1={150} x2={114} y2={152} />
+        <Edge x1={86} y1={152} x2={80} y2={215} />
+        <Edge x1={80} y1={215} x2={75} y2={278} />
+        <Edge x1={114} y1={152} x2={120} y2={215} />
+        <Edge x1={120} y1={215} x2={125} y2={278} />
+
+        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={86} cy={152} r={3.5} variant="joint" />
+        <Node cx={114} cy={152} r={3.5} variant="joint" />
+        <Node cx={80} cy={215} r={3.5} variant="joint" />
+        <Node cx={120} cy={215} r={3.5} variant="joint" />
+        <Node cx={75} cy={278} r={4} variant="joint" />
+        <Node cx={125} cy={278} r={4} variant="joint" />
+
+        {/* two neutral arms, reusing Orchestrator's arm-ul/arm-ur pivot + sway */}
+        <g className="arm-ul">
+          <Edge x1={66} y1={72} x2={50} y2={96} />
+          <Node cx={50} cy={96} r={3} variant="joint" />
+          <Edge x1={50} y1={96} x2={52} y2={120} />
+          <Node cx={52} cy={120} r={3} variant="joint" />
+        </g>
+        <g className="arm-ur">
+          <Edge x1={134} y1={72} x2={150} y2={96} />
+          <Node cx={150} cy={96} r={3} variant="joint" />
+          <Edge x1={150} y1={96} x2={148} y2={120} />
+          <Node cx={148} cy={120} r={3} variant="joint" />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
 const READY_FACES: Record<string, () => JSX.Element> = {
   orchestrator: OrchestratorFace,
   product: ProductFace,
   design: DesignFace,
   mobile: MobileFace,
+  backend: BackendFace,
 };
 
 const READY_BODIES: Record<string, () => JSX.Element> = {
@@ -731,6 +893,7 @@ const READY_BODIES: Record<string, () => JSX.Element> = {
   product: ProductBody,
   design: DesignBody,
   mobile: MobileBody,
+  backend: BackendBody,
 };
 
 /** Looks up the card/modal figure components for a given agent id. Callers
