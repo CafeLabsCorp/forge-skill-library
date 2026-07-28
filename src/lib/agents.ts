@@ -118,7 +118,11 @@ async function fetchAgent(config: AgentConfig): Promise<AgentCardData> {
       // display name is consistently derived rather than hand-written.
       name: titleCase(parsed.name),
       description: parsed.description,
-      ready: config.id === "orchestrator" || config.id === "product" || config.id === "design",
+      ready:
+        config.id === "orchestrator" ||
+        config.id === "product" ||
+        config.id === "design" ||
+        config.id === "mobile",
       unavailable: false,
       content: raw.trim(),
       sourcePath,

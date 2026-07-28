@@ -542,17 +542,218 @@ export function DesignBody() {
     </svg>
   );
 }
+/** Small "face" graph used on the badge card. Mobile's distinguishing prop
+ * (analogous to Orchestrator's triple crest, Product's asymmetric brow,
+ * Design's beret) is a centered antenna/status-light stalk rising off the
+ * head, terminating in a halo'd/pulsing "signal" node with a small second
+ * "notification badge" dot hanging off it -- the one unabashedly
+ * mobile-specific visual cue (app icon badge counts), kept abstract rather
+ * than literal. Below the head, the shoulders/hips are wired into a slim
+ * rounded-rect "screen frame" (shoulder -> hip bezel edges on both sides,
+ * closing a screen-shaped quad) instead of the plain diamond torso the other
+ * three use, with a small pulsing "glow" node floating on the spine inside
+ * it -- the figure's torso doubles as the device it builds for. Node/edge
+ * count (14/10) is deliberately a notch above the other three faces'
+ * 10-11/6-8 to fit both motifs in, but stays firmly badge-scale. */
+export function MobileFace() {
+  return (
+    <svg
+      viewBox="48 6 44 96"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {/* antenna / status light + notification badge */}
+      <Edge x1={70} y1={58} x2={70} y2={40} />
+      <Edge x1={70} y1={40} x2={70} y2={26} ghost />
+      <Edge x1={70} y1={26} x2={78} y2={20} ghost />
+      <Node cx={70} cy={40} r={2.6} variant="crest" />
+      <Node cx={70} cy={26} r={4} variant="ghost" />
+      <Node cx={70} cy={26} r={2} variant="pulse-node" />
+      <Node cx={78} cy={20} r={1.6} variant="ghost" />
+
+      {/* head */}
+      <Node cx={70} cy={58} r={7} variant="head" />
+      <Node cx={64} cy={56} r={2} variant="eye" />
+      <Node cx={76} cy={56} r={2} variant="eye" />
+
+      {/* screen frame: shoulders -> bezels -> base, plus a glow floating on
+          the spine inside the frame (a faint ghost edge anchors it to the
+          head rather than leaving it looking like a stray dot) */}
+      <Edge x1={70} y1={58} x2={58} y2={74} />
+      <Edge x1={70} y1={58} x2={82} y2={74} />
+      <Edge x1={58} y1={74} x2={58} y2={90} />
+      <Edge x1={82} y1={74} x2={82} y2={90} />
+      <Edge x1={58} y1={90} x2={70} y2={96} />
+      <Edge x1={82} y1={90} x2={70} y2={96} />
+      <Edge x1={70} y1={58} x2={70} y2={82} ghost />
+      <Node cx={58} cy={74} r={3} variant="joint" />
+      <Node cx={82} cy={74} r={3} variant="joint" />
+      <Node cx={58} cy={90} r={2.5} variant="joint" />
+      <Node cx={82} cy={90} r={2.5} variant="joint" />
+      <Node cx={70} cy={96} r={3} variant="neck" />
+      <Node cx={70} cy={82} r={2.2} variant="pulse-node" />
+    </svg>
+  );
+}
+
+/** Full-body graph (34 nodes / 31 edges) used in the modal. Shares
+ * Orchestrator's fixed head/neck/chest/hip/leg skeleton coordinates (that
+ * base skeleton -- 66,72 / 134,72 / 62,108 / 138,108 joints, same spine --
+ * is common to all four bodies; Product and Design don't diverge it either,
+ * only their arms differ), plus this figure's own screen-frame bezel edges
+ * and antenna/badge head motif carried over from the first round.
+ *
+ * The FIRST round of this figure gave all 4 limbs Orchestrator's exact
+ * symmetric outward-reaching arm-ul/ur/ll/lr pose, which read as a recolored
+ * Orchestrator rather than its own figure -- reusing a validated skeleton is
+ * fine (Product and Design do it too), but reusing the *pose* wasn't. This
+ * round replaces all 4 outward limbs with a completely different two-arm,
+ * asymmetric gesture -- the same order of divergence Product (raised
+ * pointing arm / lowered fanning arm) and Design (spiral brush arm / L-frame
+ * arm) already take from Orchestrator's 4-arm conducting spread:
+ *
+ *  - Right arm (`.arm-raise`, pivot 134,72 -- reusing Product's raise-hold
+ *    animation registers as the same "holding a position" tremor, which
+ *    fits a hand holding a device steady): bends sharply inward and up,
+ *    ending in a small rounded-rect "phone" held beside the head, like
+ *    checking/using it -- a miniature echo of the torso's own screen-frame
+ *    motif, with a pulsing glow at its center.
+ *  - Left arm (`.arm-lower`, pivot 66,72): hangs down relaxed at the torso's
+ *    side, ending in a dim, only-three-sided ghost rectangle sketch -- a
+ *    second, idle/backgrounded screen, deliberately less resolved than the
+ *    bright one actively being held. (Same "unfinished ghost rectangle"
+ *    language as Design's arm-frame, in spirit, not copied 1:1.)
+ *
+ * Both arms stay clear of the torso, each other, and the legs by
+ * construction (right arm's x stays >=116, left arm's x stays <=58, well
+ * outside the 66-134 torso band and the 75-125 leg band) -- same
+ * non-crossing discipline as every other figure's limbs, just checked
+ * against a new pose instead of Orchestrator's. Each arm is still one <g>
+ * with `transform-box: view-box` pivoting at its true shoulder joint --
+ * never `fill-box` (see the shared comment on `.arm-ul` etc. in globals.css
+ * for why: fill-box's bounding-box-relative pivot tears the limb loose from
+ * the torso on every rotate() frame). */
+export function MobileBody() {
+  return (
+    <svg
+      viewBox="0 -20 212 312"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g className="figure-group">
+        {/* antenna / status light + notification badge */}
+        <Edge x1={100} y1={38} x2={100} y2={18} />
+        <Edge x1={100} y1={18} x2={100} y2={8} ghost />
+        <Edge x1={100} y1={8} x2={108} y2={2} ghost />
+        <Node cx={100} cy={18} r={3} variant="crest" />
+        <Node cx={100} cy={8} r={4.5} variant="ghost" />
+        <Node cx={100} cy={8} r={2.4} variant="pulse-node" />
+        <Node cx={108} cy={2} r={2} variant="ghost" />
+
+        {/* head */}
+        <Node cx={100} cy={38} r={6.5} variant="head" />
+        <Node cx={94} cy={36} r={2} variant="eye" />
+        <Node cx={106} cy={36} r={2} variant="eye" />
+
+        {/* torso as a screen frame: neck -> chest -> hip spine, shoulder/hip
+            cross-edges, and the two bezel edges that close the frame */}
+        <Edge x1={100} y1={38} x2={100} y2={58} />
+        <Edge x1={100} y1={58} x2={100} y2={82} />
+        <Edge x1={100} y1={82} x2={66} y2={72} />
+        <Edge x1={100} y1={82} x2={134} y2={72} />
+        <Edge x1={66} y1={72} x2={62} y2={108} />
+        <Edge x1={134} y1={72} x2={138} y2={108} />
+        <Edge x1={100} y1={82} x2={100} y2={112} />
+        <Edge x1={100} y1={112} x2={62} y2={108} />
+        <Edge x1={100} y1={112} x2={138} y2={108} />
+        <Edge x1={100} y1={112} x2={100} y2={150} />
+
+        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
+        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={66} cy={72} r={4.5} variant="joint" />
+        <Node cx={134} cy={72} r={4.5} variant="joint" />
+        {/* screen glow: floats directly on the chest->hip spine segment
+            rather than at a vertex, reading as content glowing behind the
+            frame */}
+        <Node cx={100} cy={97} r={3} variant="pulse-node" />
+        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={62} cy={108} r={4.5} variant="joint" />
+        <Node cx={138} cy={108} r={4.5} variant="joint" />
+
+        {/* legs -- fixed, unanimated, identical shape to Orchestrator's */}
+        <Edge x1={100} y1={150} x2={86} y2={152} />
+        <Edge x1={86} y1={152} x2={80} y2={215} />
+        <Edge x1={80} y1={215} x2={75} y2={278} />
+        <Edge x1={100} y1={150} x2={114} y2={152} />
+        <Edge x1={114} y1={152} x2={120} y2={215} />
+        <Edge x1={120} y1={215} x2={125} y2={278} />
+        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={86} cy={152} r={3.5} variant="joint" />
+        <Node cx={114} cy={152} r={3.5} variant="joint" />
+        <Node cx={80} cy={215} r={3.5} variant="joint" />
+        <Node cx={120} cy={215} r={3.5} variant="joint" />
+        <Node cx={75} cy={278} r={4} variant="joint" />
+        <Node cx={125} cy={278} r={4} variant="joint" />
+
+        {/* Right arm: bends sharply inward/up and holds a small "phone"
+            rectangle beside the head -- checking/using a device. Reuses
+            Product's `.arm-raise` pivot (134,72) and hold-steady tremor,
+            which fits: a hand holding something up is also "holding a
+            position." */}
+        <g className="arm-raise">
+          <Edge x1={134} y1={72} x2={148} y2={56} />
+          <Node cx={148} cy={56} r={3.5} />
+          <Edge x1={148} y1={56} x2={130} y2={36} />
+          <Node cx={130} cy={36} r={4} />
+          {/* small held "phone": a miniature rounded-rect echo of the torso's
+              own screen-frame, with a pulsing glow at its center */}
+          <Edge x1={130} y1={36} x2={132} y2={32} />
+          <Edge x1={116} y1={16} x2={132} y2={16} />
+          <Edge x1={132} y1={16} x2={132} y2={32} />
+          <Edge x1={132} y1={32} x2={116} y2={32} />
+          <Edge x1={116} y1={32} x2={116} y2={16} />
+          <Node cx={116} cy={16} r={2} variant="joint" />
+          <Node cx={132} cy={16} r={2} variant="joint" />
+          <Node cx={132} cy={32} r={2} variant="joint" />
+          <Node cx={116} cy={32} r={2} variant="joint" />
+          <Node cx={124} cy={24} r={2.6} variant="pulse-node" />
+        </g>
+
+        {/* Left arm: hangs relaxed at the torso's side, ending in a dim,
+            only-three-sided ghost rectangle -- a second, idle/backgrounded
+            screen, deliberately less resolved than the one actively held.
+            Reuses Product's `.arm-lower` pivot (66,72) and calm tremor. */}
+        <g className="arm-lower">
+          <Edge x1={66} y1={72} x2={58} y2={98} />
+          <Node cx={58} cy={98} r={3.5} />
+          <Edge x1={58} y1={98} x2={50} y2={124} />
+          <Node cx={50} cy={124} r={4} />
+          <Edge x1={50} y1={124} x2={40} y2={136} ghost />
+          <Edge x1={40} y1={136} x2={40} y2={148} ghost />
+          <Edge x1={40} y1={148} x2={50} y2={148} ghost />
+          <Node cx={40} cy={136} r={1.8} variant="ghost" />
+          <Node cx={40} cy={148} r={1.8} variant="ghost" />
+          <Node cx={50} cy={148} r={1.8} variant="ghost" />
+        </g>
+      </g>
+    </svg>
+  );
+}
 
 const READY_FACES: Record<string, () => JSX.Element> = {
   orchestrator: OrchestratorFace,
   product: ProductFace,
   design: DesignFace,
+  mobile: MobileFace,
 };
 
 const READY_BODIES: Record<string, () => JSX.Element> = {
   orchestrator: OrchestratorBody,
   product: ProductBody,
   design: DesignBody,
+  mobile: MobileBody,
 };
 
 /** Looks up the card/modal figure components for a given agent id. Callers
