@@ -965,87 +965,43 @@ a {
   }
 }
 
-/* Design's two arms (brush / frame) — same convention as the Orchestrator's
-   arm-ul/ur/ll/lr and Product's arm-raise/arm-lower above (transform-box:
-   view-box, pivot at the actual shoulder joint coordinate, each <g> holds
-   both its nodes and edges). arm-brush went through several motion
-   treatments before landing on brushHold below (see the comment further
-   down); arm-frame is unchanged since the first round — the calmest limb of
-   all three agents (barely-there hold — it's steadily framing/measuring
-   composition, not gesturing). */
-.arm-brush {
+/* Design's two hands used to be independently-animated arms (brush / frame,
+   same arm-ul/ur convention as Orchestrator/Product: transform-box:
+   view-box, pivot at the shoulder). Retired along with the brush-coil and
+   L-frame hand concepts they belonged to, in favor of a single shared
+   "hold two opposite corners of one large square" gesture (see DesignBody
+   in figures.tsx) whose two hands are deliberately left unanimated -- each
+   hand's wrist coordinate IS a corner of the square, shared with two fixed
+   <line> edges that terminate there, so independently rotating either
+   shoulder pivot would carry that corner away from those edges, tearing
+   the square apart every frame. Life comes from the shared .pulse-node
+   rule below instead, staggered per corner in figures.tsx. */
+
+/* Design's square (see the .square-breathe <g> wrapping it in figures.tsx):
+   a subtle independent grow/shrink + rise/fall, same rhythm as
+   .figure-group's own breathe (4.2s ease-in-out infinite) but with its own
+   animation-delay so it doesn't move in lockstep with the body -- reads as
+   the square floating slightly out of phase with the figure holding it,
+   rather than rigidly attached. transform-box: view-box (never fill-box,
+   same reasoning as every other pivot in this file) with transform-origin
+   pinned at the square's actual center in the shared viewBox coordinate
+   space (103,103 -- the midpoint of corners (45,64)-(161,142)), so scaling
+   grows/shrinks around the shape's true center instead of some unrelated
+   bounding-box corner. */
+.square-breathe {
   transform-box: view-box;
-  transform-origin: 134px 72px;
-  animation: brushHold 4.2s ease-in-out infinite;
-  animation-delay: 0.15s;
+  transform-origin: 103px 103px;
+  animation: squareBreathe 4.2s ease-in-out infinite;
+  animation-delay: 0.6s;
   animation-fill-mode: backwards;
 }
-.arm-frame {
-  transform-box: view-box;
-  transform-origin: 66px 72px;
-  animation: frameHold 4.6s ease-in-out infinite;
-  animation-delay: 0.3s;
-  animation-fill-mode: backwards;
-}
-/* Replaces the old wide -6deg..+10deg brushStroke sway: that rigid
-   whole-limb rotate() suited a mid-stroke wedge/hatch hand, but spins the
-   round 4 spiral coil like a pinwheel, killing the "growing outward" read.
-   Same tame register as the sibling arm-frame's frameHold — the limb still
-   has ambient life, but the coil itself no longer rotates; see
-   .brush-coil-flow below for where the coil's motion actually comes from. */
-@keyframes brushHold {
+@keyframes squareBreathe {
   0%,
   100% {
-    transform: rotate(1.2deg);
+    transform: scale(1) translateY(0);
   }
   50% {
-    transform: rotate(-1.5deg);
-  }
-}
-@keyframes frameHold {
-  0%,
-  100% {
-    transform: rotate(1deg);
-  }
-  50% {
-    transform: rotate(-1.5deg);
-  }
-}
-
-/* Design's brush hand -- round 4, "spiral / exhaled branch"
-   (/tmp/design-brush-compare/spiral.html), the user's own direction after
-   three prior rounds (wedge+hatch, square block + ghost bristles, jointed
-   fingers) were each rejected in turn. The coil (BRUSH_COIL_SEGMENTS in
-   figures.tsx) is drawn as plain static .fig-edge weight -- always fully
-   drawn, so the spiral silhouette reads at every animation phase regardless
-   of flow state. .brush-coil-flow is a second, thinner dashed line riding
-   the exact same 17 segments, carrying the traveling "ink" highlight, with
-   a per-segment negative animation-delay (phase-stagger trick, computed
-   alongside the coordinates) so the dash reads as one continuous line
-   flowing outward rather than 17 segments blinking independently.
-
-   Two layers, not one, because the first attempt (this line's own
-   stroke-width/dasharray, no separate accent) had round line-caps bulging
-   outward by stroke-width/2 at each dash end -- wide enough to bridge the
-   gap between neighbouring dashes, so the line looked 100% solid at every
-   dashoffset and the flow was invisible, not just hard to see. This
-   layer's width/dasharray keep the cap bulge (0.8) smaller than the gap
-   (4.0), so ~2.4 units stay visibly open at every phase. Same repeat
-   length/speed as the retired .brush-ink line (6.4 units, 6.4 units/s) so
-   the material still reads as the same "ink," just traveling a coiled path
-   now instead of a straight one. */
-.brush-coil-flow {
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-dasharray: 2.4 4;
-  opacity: 0.95;
-  animation: coilFlow 1s linear infinite;
-}
-@keyframes coilFlow {
-  to {
-    stroke-dashoffset: -6.4;
+    transform: scale(1.035) translateY(-2.5px);
   }
 }
 
@@ -1080,9 +1036,7 @@ a {
   .arm-lr,
   .arm-raise,
   .arm-lower,
-  .arm-brush,
-  .arm-frame,
-  .brush-coil-flow,
+  .square-breathe,
   .pulse-node {
     animation: none !important;
   }
