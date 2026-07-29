@@ -749,7 +749,7 @@ export function MobileBody() {
 export function BackendFace() {
   return (
     <svg
-      viewBox="42 26 56 70"
+      viewBox="48 41 44 67"
       preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       focusable="false"
@@ -886,7 +886,7 @@ export function BackendBody() {
  * other face. */
 export function FrontendWebFace() {
   return (
-    <svg viewBox="40 20 60 78" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+    <svg viewBox="43 41 54 61" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
       <Node cx={70} cy={58} r={7} variant="head" />
       <Node cx={64} cy={56} r={2} variant="eye" />
       <Node cx={76} cy={56} r={2} variant="eye" />
