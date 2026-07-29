@@ -38,6 +38,12 @@ export function AgentModal({
   onClose: () => void;
 }) {
   const t = useTranslations("Modal");
+  // Plain-language "what this agent does", keyed by agent id and translated
+  // per locale — deliberately NOT the frontmatter `description` shown on the
+  // card, which is an English-only LLM trigger phrase ("Use when the
+  // orchestrator delegates...") rather than something a visitor reads to
+  // understand the role.
+  const tBlurb = useTranslations("AgentBlurbs");
   const locale = useLocale();
   const [renderedAgent, setRenderedAgent] = useState<AgentCardData | null>(null);
   const [hidden, setHidden] = useState(true);
@@ -260,6 +266,11 @@ export function AgentModal({
               {renderedAgent?.name ?? ""}
             </h2>
             <p className="modal-role">{renderedAgent?.role ?? ""}</p>
+            {/* `has` guard so an agent added to AGENT_CONFIGS before its
+             * blurb is written renders without it, instead of throwing. */}
+            {renderedAgent && tBlurb.has(renderedAgent.id) ? (
+              <p className="modal-blurb">{tBlurb(renderedAgent.id)}</p>
+            ) : null}
           </div>
           <div className="prompt-toolbar">
             <span>{renderedAgent?.sourcePath ?? ""}</span>
