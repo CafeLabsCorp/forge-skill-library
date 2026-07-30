@@ -872,6 +872,17 @@ a {
   stroke-width: 2.2;
 }
 
+/* DevOpsBody/DevOpsFace's gear crest (a plain stroked <circle>) and its
+   single asymmetric cycle-loop torso (a stroked <path> arc) -- same
+   unfilled-outline treatment as .fig-rib, shared here since both shapes are
+   "a ring you can see through" rather than a filled node or a straight
+   edge. */
+.fig-loop {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
 .figure-group {
   transform-box: fill-box;
   transform-origin: 50% 55%;
