@@ -37,6 +37,20 @@
     "installNudge": "That's one specialist. Want all {count} working together, automatically?",
     "installNudgeCta": "Install →"
   },
+  "AgentBlurbs": {
+    "orchestrator": "Runs discovery, stress-tests the idea before anyone builds, and decides which specialists the project actually needs. The one you talk to first.",
+    "product": "Finds the riskiest assumption in an idea and shapes the smallest v1 that can actually test it, instead of formalizing what you already believed.",
+    "design": "Turns validated scope into flows, screens and a visual direction — including the empty, error and offline states most designs leave for later.",
+    "mobile": "Builds the mobile app from the design and the data model, reaching for what the framework ecosystem already solved before writing custom code.",
+    "backend": "Decides and implements the data model, security rules and infrastructure — the layer where a mistake is most expensive to reverse.",
+    "frontend-web": "Builds the web side (landing, dashboard, web app) on the simplest stack that fits, with responsiveness and accessibility as a baseline.",
+    "devops": "Sets up deploy, CI/CD and the alerts that tell you something broke — without building a pipeline an MVP doesn't need.",
+    "qa": "Decides where testing effort is actually worth spending, and covers the paths that would hurt most if they broke.",
+    "security": "Reviews what was really built, not what was reported — auth, data exposure, secrets, and the abuse that quietly drains a budget.",
+    "compliance": "Drafts Terms and Privacy Policy, works through LGPD, and the store-submission checklist that blocks a launch when it's missing.",
+    "analytics": "Turns success criteria into events that actually fire, so the Measure phase runs on real data instead of gut feel.",
+    "docs": "Documents the project so a developer who has never seen it — with or without AI — can pick it up cold."
+  },
   "Install": {
     "kicker": "Run the full system",
     "heading": "One prompt now. All the specialists, permanently.",

@@ -37,6 +37,20 @@
     "installNudge": "Isso é 1 especialista. Quer os {count} trabalhando juntos, automaticamente?",
     "installNudgeCta": "Instalar →"
   },
+  "AgentBlurbs": {
+    "orchestrator": "Conduz a descoberta, questiona a ideia antes de qualquer um construir e decide de quais especialistas o projeto realmente precisa. É com ele que a conversa começa.",
+    "product": "Acha a suposição mais arriscada da ideia e desenha o menor v1 capaz de testá-la, em vez de só formalizar o que você já acreditava.",
+    "design": "Transforma escopo validado em fluxos, telas e direção visual — incluindo os estados vazio, de erro e offline que a maioria dos designs deixa pra depois.",
+    "mobile": "Constrói o app mobile a partir do design e do modelo de dados, preferindo o que o ecossistema já resolveu antes de escrever código próprio.",
+    "backend": "Decide e implementa modelo de dados, security rules e infraestrutura — a camada em que errar sai mais caro pra desfazer.",
+    "frontend-web": "Constrói a parte web (landing, dashboard, web app) com a stack mais simples que atende, tendo responsividade e acessibilidade como base.",
+    "devops": "Monta deploy, CI/CD e os alertas que avisam quando algo quebra — sem construir um pipeline que um MVP não precisa.",
+    "qa": "Decide onde vale mesmo gastar esforço de teste e cobre os caminhos que mais doeriam se quebrassem.",
+    "security": "Revisa o que foi construído de fato, não o que foi reportado — autenticação, exposição de dados, segredos e o abuso que drena o orçamento em silêncio.",
+    "compliance": "Redige Termos e Política de Privacidade, percorre a LGPD e o checklist de submissão de loja que trava um lançamento quando falta.",
+    "analytics": "Transforma critérios de sucesso em eventos que realmente disparam, pra fase de medição rodar com dado real em vez de achismo.",
+    "docs": "Documenta o projeto pra que um dev que nunca o viu — com ou sem IA — consiga pegar do zero."
+  },
   "Install": {
     "kicker": "Rode o sistema completo",
     "heading": "Um prompt agora. Todos os especialistas, pra sempre.",
