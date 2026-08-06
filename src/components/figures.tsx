@@ -926,19 +926,25 @@ export function BackendBody() {
  * other face. */
 export function FrontendWebFace() {
   return (
-    <svg viewBox="43 41 54 61" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+    <svg viewBox="43 30 54 72" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      {/* closing-tag slash crest, badge scale */}
+      <Edge x1={70} y1={51} x2={70} y2={46} />
+      <Node cx={70} cy={46} r={1.4} variant="joint" />
+      <Edge x1={70} y1={46} x2={80} y2={33} />
+      <Node cx={80} cy={33} r={2} variant="joint" />
+
       <Node cx={70} cy={58} r={7} variant="head" />
       <Node cx={64} cy={56} r={2} variant="eye" />
       <Node cx={76} cy={56} r={2} variant="eye" />
       <Edge x1={70} y1={58} x2={70} y2={74} />
-      <Node cx={70} cy={74} r={2.8} variant="pulse-node" />
+      <Node cx={70} cy={74} r={2.8} variant="joint" />
 
       <Edge x1={60} y1={64} x2={52} y2={78} />
       <Edge x1={52} y1={78} x2={60} y2={92} />
       <Edge x1={80} y1={64} x2={88} y2={78} />
       <Edge x1={88} y1={78} x2={80} y2={92} />
-      <Node cx={52} cy={78} r={1.8} variant="pulse-node" />
-      <Node cx={88} cy={78} r={1.8} variant="pulse-node" />
+      <Node cx={52} cy={78} r={1.8} variant="joint" />
+      <Node cx={88} cy={78} r={1.8} variant="joint" />
 
       <Edge x1={70} y1={74} x2={60} y2={64} />
       <Edge x1={70} y1={74} x2={80} y2={64} />
@@ -983,41 +989,45 @@ export function FrontendWebBody() {
   return (
     <svg viewBox="0 -20 212 312" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
       <g className="figure-group">
+        {/* Closing-tag slash crest. v1 and v2 of this figure both tried a
+            browser-window crest and both died on the same note from Felipe
+            ("parece uma impressora") -- the problem was the boxy
+            nested-rectangle chrome bar, so this deliberately contains no
+            rectangle at all: one diagonal on a short stalk. Read together
+            with the two bracket halves of the torso below, the figure spells
+            `</>` head to hip. */}
+        <Edge x1={100} y1={32} x2={100} y2={26} />
+        <Node cx={100} cy={26} r={1.5} variant="joint" />
+        <Edge x1={100} y1={26} x2={114} y2={8} />
+        <Node cx={114} cy={8} r={2.4} variant="joint" />
+
         {/* head + neck */}
         <Edge x1={100} y1={38} x2={100} y2={58} />
         <Node cx={100} cy={38} r={6.5} variant="head" />
         <Node cx={94} cy={36} r={2} variant="eye" />
         <Node cx={106} cy={36} r={2} variant="eye" />
-        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
 
-        {/* torso: two tag brackets inside the standard shoulder/hip width,
-            plus a dashed "blinking cursor" hinting at content between them */}
-        <Edge x1={84} y1={64} x2={74} y2={86} />
-        <Edge x1={74} y1={86} x2={84} y2={108} />
-        <Edge x1={116} y1={64} x2={126} y2={86} />
-        <Edge x1={126} y1={86} x2={116} y2={108} />
-        <Node cx={74} cy={86} r={2.2} variant="pulse-node" />
-        <Node cx={126} cy={86} r={2.2} variant="pulse-node" />
-        <Edge x1={100} y1={76} x2={100} y2={94} ghost />
-        <Node cx={100} cy={94} r={1.6} variant="ghost" />
-
-        {/* shoulders + hips -- shared skeleton, unchanged from every other figure */}
+        {/* torso: the plain shared skeleton, deliberately. The brackets
+            moved out to the arms (see below), so nothing competes with them
+            here -- same restraint that lets Product's and DevOps' poses
+            carry those figures over an unremarkable torso. */}
         <Edge x1={100} y1={58} x2={100} y2={82} />
         <Edge x1={100} y1={82} x2={66} y2={72} />
         <Edge x1={100} y1={82} x2={134} y2={72} />
-        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={82} r={4.5} variant="joint" />
         <Node cx={66} cy={72} r={4.5} variant="joint" />
         <Node cx={134} cy={72} r={4.5} variant="joint" />
         <Edge x1={100} y1={82} x2={100} y2={112} />
         <Edge x1={100} y1={112} x2={62} y2={108} />
         <Edge x1={100} y1={112} x2={138} y2={108} />
-        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={112} r={4.5} variant="joint" />
         <Node cx={62} cy={108} r={4.5} variant="joint" />
         <Node cx={138} cy={108} r={4.5} variant="joint" />
 
         {/* pelvis -> thighs -> knees -- shared skeleton */}
         <Edge x1={100} y1={112} x2={100} y2={150} />
-        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Edge x1={100} y1={150} x2={86} y2={152} />
         <Edge x1={100} y1={150} x2={114} y2={152} />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
@@ -1027,31 +1037,41 @@ export function FrontendWebBody() {
         <Node cx={80} cy={215} r={3.5} variant="joint" />
         <Node cx={120} cy={215} r={3.5} variant="joint" />
 
-        {/* shins -> tag feet: same bracket angle as the torso, smaller scale */}
-        <Edge x1={80} y1={215} x2={78} y2={255} />
-        <Edge x1={78} y1={255} x2={60} y2={268} />
-        <Edge x1={60} y1={268} x2={78} y2={280} />
-        <Node cx={60} cy={268} r={2.2} variant="pulse-node" />
-        <Node cx={78} cy={280} r={3.5} variant="joint" />
-        <Edge x1={120} y1={215} x2={122} y2={255} />
-        <Edge x1={122} y1={255} x2={140} y2={268} />
-        <Edge x1={140} y1={268} x2={122} y2={280} />
-        <Node cx={140} cy={268} r={2.2} variant="pulse-node" />
-        <Node cx={122} cy={280} r={3.5} variant="joint" />
+        {/* shins -> feet -- the plain shared skeleton every other figure
+            uses. These used to be tag brackets echoing the torso at smaller
+            scale, on the theory that the figure should read head-to-toe as
+            one idea; dropped at Felipe's request. The bracket read never
+            survived at foot scale anyway -- with the ankle inside the
+            bracket rather than on the shin line, the leg looked broken. */}
+        <Edge x1={80} y1={215} x2={75} y2={278} />
+        <Edge x1={120} y1={215} x2={125} y2={278} />
+        <Node cx={75} cy={278} r={4} variant="joint" />
+        <Node cx={125} cy={278} r={4} variant="joint" />
 
-        {/* two neutral arms, reusing Orchestrator's arm-ul/arm-ur pivot + sway,
-            lengthened to reach about waist height */}
+        {/* THE motif: each arm bends into one tag bracket, so the body
+            stands inside `< >`. Elbow swings out past the hips and the
+            wrist comes back to sit directly under its own shoulder, which
+            is what makes the angle read as a bracket instead of a bent
+            limb. No other figure's arms spell anything, and it keeps the
+            identity in the pose rather than in a shape parked in the torso
+            slot -- the same objection that killed this figure's v1/v2
+            browser-window crest and, later, the shrunken in-chest brackets.
+
+            Still Orchestrator's arm-ul/arm-ur pivots and sway, unchanged.
+            Those two keyframes are mirror-opposite in sign (swayA -4->3,
+            swayB +4->-3), so the two brackets open and close symmetrically
+            instead of shearing to one side. */}
         <g className="arm-ul">
-          <Edge x1={66} y1={72} x2={48} y2={100} />
-          <Node cx={48} cy={100} r={3} variant="joint" />
-          <Edge x1={48} y1={100} x2={52} y2={134} />
-          <Node cx={52} cy={134} r={3} variant="joint" />
+          <Edge x1={66} y1={72} x2={42} y2={104} />
+          <Node cx={42} cy={104} r={3.5} variant="joint" />
+          <Edge x1={42} y1={104} x2={66} y2={136} />
+          <Node cx={66} cy={136} r={3} variant="joint" />
         </g>
         <g className="arm-ur">
-          <Edge x1={134} y1={72} x2={152} y2={100} />
-          <Node cx={152} cy={100} r={3} variant="joint" />
-          <Edge x1={152} y1={100} x2={148} y2={134} />
-          <Node cx={148} cy={134} r={3} variant="joint" />
+          <Edge x1={134} y1={72} x2={158} y2={104} />
+          <Node cx={158} cy={104} r={3.5} variant="joint" />
+          <Edge x1={158} y1={104} x2={134} y2={136} />
+          <Node cx={134} cy={136} r={3} variant="joint" />
         </g>
       </g>
     </svg>
