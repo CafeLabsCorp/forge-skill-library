@@ -754,17 +754,27 @@ export function MobileBody() {
 export function BackendFace() {
   return (
     <svg
-      viewBox="48 41 44 67"
+      viewBox="48 33 44 75"
       preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       focusable="false"
     >
+      {/* key crest, badge scale */}
+      <Edge x1={70} y1={51} x2={70} y2={40} />
+      <circle className="fig-loop" cx={58} cy={40} r={4} fill="none" stroke="currentColor" strokeWidth={2} />
+      <Node cx={58} cy={40} r={1.1} variant="joint" />
+      <Edge x1={62} y1={40} x2={84} y2={40} />
+      <Edge x1={77} y1={40} x2={77} y2={46} />
+      <Edge x1={84} y1={40} x2={84} y2={46} />
+      <Node cx={77} cy={46} r={1.2} variant="joint" />
+      <Node cx={84} cy={46} r={1.2} variant="joint" />
+
       {/* head + neck */}
       <Edge x1={70} y1={58} x2={70} y2={76} />
       <Node cx={70} cy={58} r={7} variant="head" />
       <Node cx={64} cy={56} r={2} variant="eye" />
       <Node cx={76} cy={56} r={2} variant="eye" />
-      <Node cx={70} cy={76} r={2.6} variant="pulse-node" />
+      <Node cx={70} cy={76} r={2.6} variant="joint" />
 
       {/* ribcage: 2 stacked arcs, sides connecting their endpoints */}
       <Rib x1={58} y={79} x2={82} bow={5} cap />
@@ -772,7 +782,7 @@ export function BackendFace() {
       <Edge x1={58} y1={79} x2={55} y2={90} />
       <Edge x1={82} y1={79} x2={85} y2={90} />
       <Node cx={70} cy={84} r={1.6} variant="joint" />
-      <Node cx={70} cy={95} r={3} variant="pulse-node" />
+      <Node cx={70} cy={95} r={3} variant="joint" />
     </svg>
   );
 }
@@ -795,7 +805,7 @@ export function BackendFace() {
  * endpoints to the next rather than running two straight barrel walls, so
  * the shape reads as ribs that happen to echo a cylinder, not a rigid
  * cylinder dropped onto a body. The 2nd and 4th arcs deliberately bow
- * through (100,82)/(100,112) — the exact torso/hip pulse-nodes every other
+ * through (100,82)/(100,112) — the exact torso/hip nodes every other
  * figure's shoulders/hips already branch from — so the ribcage doesn't add
  * new skeleton, it re-draws the existing one.
  *
@@ -815,16 +825,41 @@ export function BackendBody() {
       focusable="false"
     >
       <g className="figure-group">
+        {/* Key crest. A crest was deliberately absent here for several
+            passes (one strong motif beats a hat bolted on); added on
+            Felipe's request that every figure carry something on the head.
+            A cloud was tried first, on the reasoning that this agent's own
+            role subtitle is "Cloud Architect" -- rejected: "não tem nada a
+            ver com backend", and even drawn correctly the three bumps read
+            as a mountain range. The key instead points at auth and security
+            rules, which are named in the agent's own description and are
+            the thing it refuses to compromise on under time pressure.
+            Chosen over a database cylinder, which reads faster but would
+            repeat what the ribcage torso already says.
+
+            Ring is r=5 against DevOps' r=7 gear, sits off the body's axis
+            with a long horizontal shaft, and has pronounced teeth -- three
+            separations kept on purpose, since a stroked ring above a head
+            is otherwise that figure's signature. */}
+        <Edge x1={100} y1={32} x2={100} y2={18} />
+        <circle className="fig-loop" cx={86} cy={18} r={5} fill="none" stroke="currentColor" strokeWidth={2} />
+        <Node cx={86} cy={18} r={1.3} variant="joint" />
+        <Edge x1={91} y1={18} x2={118} y2={18} />
+        <Edge x1={109} y1={18} x2={109} y2={26} />
+        <Edge x1={118} y1={18} x2={118} y2={26} />
+        <Node cx={109} cy={26} r={1.4} variant="joint" />
+        <Node cx={118} cy={26} r={1.4} variant="joint" />
+
         {/* head + neck */}
         <Edge x1={100} y1={38} x2={100} y2={58} />
         <Node cx={100} cy={38} r={6.5} variant="head" />
         <Node cx={94} cy={36} r={2} variant="eye" />
         <Node cx={106} cy={36} r={2} variant="eye" />
-        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
 
         {/* ribcage: 4 stacked arcs, sides connecting consecutive endpoints.
-            2nd/4th arcs bow exactly through the shared torso/hip
-            pulse-nodes below, so shoulders/hips still branch from the same
+            2nd/4th arcs bow exactly through the shared torso/hip nodes
+            below, so shoulders/hips still branch from the same
             coordinates every other figure uses. */}
         <Rib x1={82} y={62} x2={118} bow={6} cap />
         <Rib x1={78} y={76} x2={122} bow={6} />
@@ -837,9 +872,9 @@ export function BackendBody() {
         <Edge x1={122} y1={76} x2={120} y2={92} />
         <Edge x1={120} y1={92} x2={124} y2={104} />
         <Node cx={100} cy={68} r={2} variant="joint" />
-        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={82} r={4.5} variant="joint" />
         <Node cx={100} cy={98} r={2} variant="joint" />
-        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={112} r={4.5} variant="joint" />
 
         {/* shoulders + hips + legs -- shared skeleton, unchanged from
             Orchestrator/Product/Mobile */}
@@ -859,7 +894,7 @@ export function BackendBody() {
         <Edge x1={114} y1={152} x2={120} y2={215} />
         <Edge x1={120} y1={215} x2={125} y2={278} />
 
-        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
         <Node cx={114} cy={152} r={3.5} variant="joint" />
         <Node cx={80} cy={215} r={3.5} variant="joint" />
