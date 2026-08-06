@@ -1079,37 +1079,46 @@ export function FrontendWebBody() {
 }
 
 /** Small "face" graph used on the badge card. Badge-scale echo of
- * DevOpsBody's gear crest + single asymmetric cycle-loop torso, cropped at
- * the shoulders like every other face -- no arms (there's no room to imply
- * the asymmetric raised-arm pose at badge scale without it just reading as
- * noise), the crest and loop alone carry the identity here. */
+ * DevOpsBody's gear crest, cropped at the shoulders like every other face --
+ * no arms (there's no room to imply the asymmetric raised-arm pose at badge
+ * scale without it just reading as noise), so the crest alone carries the
+ * identity here.
+ *
+ * An earlier version also carried a badge-scale copy of DevOpsBody's
+ * cycle-loop torso (the arc + arrowhead "refresh" glyph). Dropped at
+ * Felipe's request: at badge size the arrowhead lost its direction and the
+ * arc just read as a stray circle under the chin, competing with the gear
+ * crest right above it for the same "ring" reading. The loop stays where it
+ * has room to be legible -- the full body. viewBox re-cropped to the
+ * remaining content (was "51 -4 44 108") so the crest+head fill the card
+ * photo instead of floating in the empty space the loop used to occupy, and
+ * the crest itself pulled down onto the head -- see the comment on it. */
 export function DevOpsFace() {
   return (
-    <svg viewBox="51 -4 44 108" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-      {/* gear crest */}
-      <circle className="fig-loop" cx={70} cy={16} r={6} fill="none" stroke="currentColor" strokeWidth={2} />
-      <Node cx={70} cy={16} r={1.3} variant="pulse-node" />
-      <Edge x1={70} y1={10} x2={70} y2={6} />
-      <Node cx={70} cy={6} r={1.1} variant="joint" />
-      <Edge x1={64} y1={16} x2={60} y2={16} />
-      <Node cx={60} cy={16} r={1.1} variant="joint" />
-      <Edge x1={76} y1={16} x2={80} y2={16} />
-      <Node cx={80} cy={16} r={1.1} variant="joint" />
-      <Edge x1={70} y1={22} x2={70} y2={58} />
+    <svg viewBox="48 19 44 60" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      {/* gear crest -- sits just above the head. It used to float at cy=16
+          on a 36-unit bare stalk, which only worked while the cycle-loop
+          torso filled the bottom of the frame; once that came out and the
+          viewBox tightened, the stalk became the longest line in the badge
+          and the whole thing read as a lollipop with a small head at the
+          bottom. Pulled down to cy=34, so the crest reads as a crest --
+          same relationship Design's beret and Mobile's antenna have. */}
+      <circle className="fig-loop" cx={70} cy={34} r={6} fill="none" stroke="currentColor" strokeWidth={2} />
+      <Node cx={70} cy={34} r={1.3} variant="joint" />
+      <Edge x1={70} y1={28} x2={70} y2={24} />
+      <Node cx={70} cy={24} r={1.1} variant="joint" />
+      <Edge x1={64} y1={34} x2={60} y2={34} />
+      <Node cx={60} cy={34} r={1.1} variant="joint" />
+      <Edge x1={76} y1={34} x2={80} y2={34} />
+      <Node cx={80} cy={34} r={1.1} variant="joint" />
+      <Edge x1={70} y1={40} x2={70} y2={58} />
 
       {/* head + neck */}
       <Node cx={70} cy={58} r={7} variant="head" />
       <Node cx={64} cy={56} r={2} variant="eye" />
       <Node cx={76} cy={56} r={2} variant="eye" />
       <Edge x1={70} y1={58} x2={70} y2={72} />
-      <Node cx={70} cy={72} r={2.6} variant="pulse-node" />
-
-      {/* single asymmetric cycle-loop torso, badge scale */}
-      <path className="fig-loop" d="M 67.9 91.8 A 12 12 0 1 1 81.3 84.1" fill="none" stroke="currentColor" strokeWidth={2} />
-      <Edge x1={81.3} y1={84.1} x2={79.6} y2={79.4} />
-      <Edge x1={81.3} y1={84.1} x2={85.6} y2={81.6} />
-      <Node cx={67.9} cy={91.8} r={1.6} variant="pulse-node" />
-      <Node cx={81.3} cy={84.1} r={1.2} variant="joint" />
+      <Node cx={70} cy={72} r={2.6} variant="joint" />
 
       {/* shoulder hint */}
       <Edge x1={70} y1={72} x2={60} y2={64} />
