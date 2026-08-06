@@ -1251,7 +1251,227 @@ export function DevOpsBody() {
           <Node cx={166} cy={30} r={3} variant="joint" />
           <Edge x1={166} y1={30} x2={178} y2={20} ghost />
           <Node cx={178} cy={20} r={5} variant="ghost" />
-          <Node cx={178} cy={20} r={2.2} variant="pulse-node" />
+          <Node cx={178} cy={20} r={2.2} variant="ghost" />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
+/** Small "face" graph used on the badge card. Badge-scale echo of QABody's
+ * test-pyramid torso: the same 3-tier triangle with the apex node and the
+ * wide base row of dots, cropped at the shoulders like every other face.
+ *
+ * Two things from the body are deliberately NOT here. The middle tier's dots
+ * (only the apex and the base row survive -- 9 dots inside a 50-unit triangle
+ * turn to noise at 116px card scale, and apex-vs-base alone already carries
+ * the "few heavy tests, many cheap ones" gradient). And the gate boom, which
+ * needs a visible arm holding it to read as a barrier rather than a stray
+ * horizontal line -- faces have no arms. The pyramid alone is unlike any
+ * other torso in the set, so it carries the identity here on its own, the
+ * same way BackendFace leans entirely on its ribcage. */
+export function QAFace() {
+  return (
+    <svg viewBox="46 34 48 73" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      {/* pass/fail fork crest, badge scale */}
+      <Edge x1={70} y1={51} x2={70} y2={46} />
+      <Node cx={70} cy={46} r={1.4} variant="joint" />
+      <Edge x1={70} y1={46} x2={62} y2={38} />
+      <Node cx={62} cy={38} r={2.2} variant="joint" />
+      <Edge x1={70} y1={46} x2={78} y2={38} ghost />
+      <Node cx={78} cy={38} r={2.2} variant="ghost" />
+
+      {/* head + a real neck: the apex starts BELOW the neck node, not at it,
+          or the head reads as a bauble sitting on a tent */}
+      <Node cx={70} cy={58} r={7} variant="head" />
+      <Node cx={64} cy={56} r={2} variant="eye" />
+      <Node cx={76} cy={56} r={2} variant="eye" />
+      <Edge x1={70} y1={58} x2={70} y2={72} />
+      <Node cx={70} cy={72} r={2.6} variant="joint" />
+
+      {/* test pyramid: 2 tier dividers splitting it into E2E / widget / unit */}
+      <Edge x1={70} y1={72} x2={50} y2={102} />
+      <Edge x1={70} y1={72} x2={90} y2={102} />
+      <Edge x1={50} y1={102} x2={90} y2={102} />
+      <Edge x1={63} y1={82} x2={77} y2={82} />
+      <Edge x1={57} y1={92} x2={83} y2={92} />
+      <Node cx={63} cy={82} r={1.6} variant="joint" />
+      <Node cx={77} cy={82} r={1.6} variant="joint" />
+      <Node cx={57} cy={92} r={1.6} variant="joint" />
+      <Node cx={83} cy={92} r={1.6} variant="joint" />
+
+      {/* one apex test vs. a full base row -- the pyramid's whole argument */}
+      <Node cx={70} cy={78} r={1.7} variant="joint" />
+      <Node cx={57} cy={98} r={1.4} variant="joint" />
+      <Node cx={63} cy={98} r={1.4} variant="joint" />
+      <Node cx={70} cy={98} r={1.4} variant="joint" />
+      <Node cx={77} cy={98} r={1.4} variant="joint" />
+      <Node cx={83} cy={98} r={1.4} variant="joint" />
+
+      {/* shoulder hint -- branches off the neck node, same as the body */}
+      <Edge x1={70} y1={72} x2={56} y2={78} />
+      <Edge x1={70} y1={72} x2={84} y2={78} />
+      <Node cx={56} cy={78} r={2.6} variant="joint" />
+      <Node cx={84} cy={78} r={2.6} variant="joint" />
+    </svg>
+  );
+}
+
+/** Full-body graph used in the modal. Two ideas, neither of which any other
+ * figure in the set can accidentally repeat:
+ *
+ * TORSO -- the test pyramid, the one diagram this domain is actually built
+ * on. Apex at the neck node (100,58), base sitting exactly on the shared hip
+ * line (62,108)-(138,108), split by 2 tier dividers into E2E / widget / unit,
+ * with 1 / 3 / 5 dots inside them. It's the only triangular torso here (and
+ * the only one that widens downward), so it can't be mistaken for Backend's
+ * stacked rings, Frontend's two brackets, Mobile's screen frame or DevOps'
+ * cycle arc -- the complaint that killed DevOps v1 ("vc ta seguindo um
+ * padrão": same skeleton, different icon dropped into the torso slot) is
+ * exactly what this avoids, since the pyramid IS the skeleton here. The
+ * shoulders branch off the upper tier corners (87,75)/(113,75) rather than
+ * off the spine at (100,82) like everyone else, both to keep 4 lines from
+ * starbursting out of the neck node and so the torso is load-bearing instead
+ * of decorative.
+ *
+ * POSE -- the gate. Right arm drops to a hinge at (146,130) and holds a long
+ * horizontal boom across the front of the body: this agent is the check
+ * standing between Build and Measure, and it says "not yet" by blocking, not
+ * by pointing (pointing is already Product's and DevOps' idiom). The boom is
+ * solid from the hinge to the body midline and dashed from the midline
+ * outward, so the dash march (see .fig-edge.ghost in globals.css) runs it
+ * continuously away from the body -- verified behind the bar, unverified
+ * ahead of it. Left arm is low and open under the pyramid's wide base,
+ * cupping it: the cheap unit tests are what the whole shape rests on.
+ *
+ * Head/neck/pelvis/legs unchanged from every other figure. */
+export function QABody() {
+  return (
+    <svg viewBox="0 -20 212 312" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      <g className="figure-group">
+        {/* Pass/fail fork crest: one stalk off the head splitting into two
+            prongs -- the verified outcome drawn solid, the unverified one
+            drawn as a ghost edge ending in a dim node. It's the same
+            solid-vs-dim vocabulary the whole set now uses to say what a node
+            is attached to, applied as a statement instead of a side effect,
+            and it inherits the outward dash march for free (the ghost prong
+            is authored head -> out). Deliberately asymmetric so it can't be
+            confused with Orchestrator's symmetric triple crest. */}
+        <Edge x1={100} y1={32} x2={100} y2={26} />
+        <Node cx={100} cy={26} r={1.5} variant="joint" />
+        <Edge x1={100} y1={26} x2={88} y2={14} />
+        <Node cx={88} cy={14} r={2.6} variant="joint" />
+        <Edge x1={100} y1={26} x2={112} y2={14} ghost />
+        <Node cx={112} cy={14} r={2.6} variant="ghost" />
+
+        {/* head + neck -- shared skeleton */}
+        <Edge x1={100} y1={38} x2={100} y2={58} />
+        <Node cx={100} cy={38} r={6.5} variant="head" />
+        <Node cx={94} cy={36} r={2} variant="eye" />
+        <Node cx={106} cy={36} r={2} variant="eye" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
+
+        {/* chest: a short spine stub between the neck and the apex. Without
+            it the pyramid starts at the chin and the head reads as a bauble
+            on a tent rather than a head on a body. */}
+        <Edge x1={100} y1={58} x2={100} y2={66} />
+        <Node cx={100} cy={66} r={3} variant="joint" />
+
+        {/* torso: test pyramid, 60 wide x 50 tall. Base corners ARE the hip
+            joints, so the triangle replaces the rest of the spine rather
+            than sitting on top of it. Deliberately narrower and taller than
+            the first pass (which was 68x40 with the base on the standard
+            y=108 hip line): squat and wide, the shape stopped reading as a
+            pyramid diagram and started reading as a skirt. */}
+        <Edge x1={100} y1={66} x2={70} y2={116} />
+        <Edge x1={100} y1={66} x2={130} y2={116} />
+        <Edge x1={70} y1={116} x2={130} y2={116} />
+        <Edge x1={90} y1={83} x2={110} y2={83} />
+        <Edge x1={80} y1={99} x2={120} y2={99} />
+        <Node cx={90} cy={83} r={2} variant="joint" />
+        <Node cx={110} cy={83} r={2} variant="joint" />
+        <Node cx={80} cy={99} r={2} variant="joint" />
+        <Node cx={120} cy={99} r={2} variant="joint" />
+
+        {/* 1 / 3 / 5: a handful of E2E on top, a wide cheap unit base.
+            Sizes shrink as the count grows -- few and heavy vs. many and
+            light, the same claim the outline makes, said twice. */}
+        <Node cx={100} cy={74} r={2.6} variant="joint" />
+        <Node cx={89} cy={91} r={2.2} variant="joint" />
+        <Node cx={100} cy={91} r={2.2} variant="joint" />
+        <Node cx={111} cy={91} r={2.2} variant="joint" />
+        <Node cx={79} cy={108} r={1.9} variant="joint" />
+        <Node cx={90} cy={108} r={1.9} variant="joint" />
+        <Node cx={100} cy={108} r={1.9} variant="joint" />
+        <Node cx={110} cy={108} r={1.9} variant="joint" />
+        <Node cx={121} cy={108} r={1.9} variant="joint" />
+
+        {/* shoulders -- near-horizontal, branching off the APEX. Running
+            them from the neck node instead (first pass) drew two long
+            diagonals down and out, which paired with the pyramid's own
+            slopes into a second, bigger triangle stacked over the first:
+            the whole figure read as a lampshade with a small head on top.
+            From the apex they stay short and flat, and the top of the
+            pyramid becomes the shoulder girdle, which is honest. */}
+        <Edge x1={100} y1={66} x2={66} y2={72} />
+        <Edge x1={100} y1={66} x2={134} y2={72} />
+        <Node cx={66} cy={72} r={4.5} variant="joint" />
+        <Node cx={134} cy={72} r={4.5} variant="joint" />
+
+        {/* hips -> pelvis -> legs -- shared skeleton, with the hips moved to
+            the pyramid's base corners (70,116)/(130,116) so the base reads
+            as one continuous edge instead of a bar floating near them */}
+        <Node cx={70} cy={116} r={4.5} variant="joint" />
+        <Node cx={130} cy={116} r={4.5} variant="joint" />
+        <Node cx={100} cy={116} r={4.5} variant="joint" />
+        <Edge x1={100} y1={116} x2={100} y2={150} />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
+        <Edge x1={100} y1={150} x2={86} y2={152} />
+        <Edge x1={100} y1={150} x2={114} y2={152} />
+        <Node cx={86} cy={152} r={3.5} variant="joint" />
+        <Node cx={114} cy={152} r={3.5} variant="joint" />
+        <Edge x1={86} y1={152} x2={80} y2={215} />
+        <Edge x1={80} y1={215} x2={75} y2={278} />
+        <Edge x1={114} y1={152} x2={120} y2={215} />
+        <Edge x1={120} y1={215} x2={125} y2={278} />
+        <Node cx={80} cy={215} r={3.5} variant="joint" />
+        <Node cx={120} cy={215} r={3.5} variant="joint" />
+        <Node cx={75} cy={278} r={4} variant="joint" />
+        <Node cx={125} cy={278} r={4} variant="joint" />
+
+        {/* Left arm: low and open, palm cupped under the pyramid's wide
+            base. Deliberately NOT touching the base corner (62,108) -- the
+            hand lives in an .arm-lower group that rotates a couple of
+            degrees, so any edge drawn to a fixed skeleton point would tear
+            loose every frame (the coupling bug DesignBody's comment warns
+            about). Reads as supporting by proximity instead. */}
+        <g className="arm-lower">
+          <Edge x1={66} y1={72} x2={48} y2={98} />
+          <Node cx={48} cy={98} r={3.5} variant="joint" />
+          <Edge x1={48} y1={98} x2={56} y2={122} />
+          <Node cx={56} cy={122} r={3.5} variant="joint" />
+          <Edge x1={56} y1={122} x2={50} y2={116} />
+          <Edge x1={56} y1={122} x2={63} y2={117} />
+          <Node cx={50} cy={116} r={1.7} variant="joint" />
+          <Node cx={63} cy={117} r={1.7} variant="joint" />
+        </g>
+
+        {/* Right arm: the gate. Shoulder -> elbow -> hinge, then a long boom
+            crossing the body. Solid hinge-to-midline, dashed midline-outward
+            (authored center -> out, so the dash march runs away from the
+            body). The whole thing sits in one .arm-raise group: at the boom
+            tip's ~89-unit radius from the shoulder pivot, that rule's small
+            +-2deg tremor becomes a visible slow rock, which is exactly how a
+            boom barrier should sit. */}
+        <g className="arm-raise">
+          <Edge x1={134} y1={72} x2={150} y2={106} />
+          <Node cx={150} cy={106} r={3.5} variant="joint" />
+          <Edge x1={150} y1={106} x2={146} y2={136} />
+          <Node cx={146} cy={136} r={4} variant="joint" />
+          <Edge x1={146} y1={136} x2={100} y2={136} />
+          <Node cx={100} cy={136} r={2.4} variant="joint" />
+          <Edge x1={100} y1={136} x2={66} y2={136} ghost />
+          <Node cx={66} cy={136} r={2.2} variant="ghost" />
         </g>
       </g>
     </svg>
@@ -1266,6 +1486,7 @@ const READY_FACES: Record<string, () => JSX.Element> = {
   backend: BackendFace,
   "frontend-web": FrontendWebFace,
   devops: DevOpsFace,
+  qa: QAFace,
 };
 
 const READY_BODIES: Record<string, () => JSX.Element> = {
@@ -1276,6 +1497,7 @@ const READY_BODIES: Record<string, () => JSX.Element> = {
   backend: BackendBody,
   "frontend-web": FrontendWebBody,
   devops: DevOpsBody,
+  qa: QABody,
 };
 
 /** Looks up the card/modal figure components for a given agent id. Callers

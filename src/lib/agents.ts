@@ -126,7 +126,8 @@ async function fetchAgent(config: AgentConfig): Promise<AgentCardData> {
         config.id === "mobile" ||
         config.id === "backend" ||
         config.id === "frontend-web" ||
-        config.id === "devops",
+        config.id === "devops" ||
+        config.id === "qa",
       unavailable: false,
       content: raw.trim(),
       sourcePath,
