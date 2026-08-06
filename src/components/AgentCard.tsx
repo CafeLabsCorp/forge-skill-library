@@ -14,7 +14,13 @@ export function AgentCard({
   onOpen: (agent: AgentCardData) => void;
 }) {
   const t = useTranslations("Card");
+  // Same translated blurb the modal shows. `agent.description` (the .md
+  // frontmatter) stays as the fallback: it's an English LLM trigger phrase
+  // rather than visitor-facing copy, and for an agent whose build-time fetch
+  // failed it carries the "couldn't be fetched" explanation instead.
+  const tBlurb = useTranslations("AgentBlurbs");
   const { Face } = getReadyFigures(agent.id);
+  const blurb = tBlurb.has(agent.id) ? tBlurb(agent.id) : agent.description;
   const stateClass = agent.unavailable ? " is-unavailable" : !agent.ready ? " is-locked" : "";
   const tag = agent.unavailable ? t("tagUnavailable") : !agent.ready ? t("tagSoon") : null;
   const ariaLabel = agent.unavailable
@@ -45,7 +51,7 @@ export function AgentCard({
             ) : null}
           </span>
           <span className="card-role">{agent.role}</span>
-          <span className="card-desc">{agent.description}</span>
+          <span className="card-desc">{blurb}</span>
         </span>
       </button>
     </li>
