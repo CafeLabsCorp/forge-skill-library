@@ -856,10 +856,33 @@ a {
   stroke-width: 2;
   fill: none;
 }
+/* Every dashed edge marches its dashes along its own path instead of sitting
+   still. Direction comes for free from the drawing order: every ghost <Edge>
+   in figures.tsx is authored (x1,y1)=inner -> (x2,y2)=outer (shoulder ->
+   hand, wrist -> held shape, head -> antenna tip, hand -> beacon), and a
+   NEGATIVE stroke-dashoffset walks the pattern from start to end -- so the
+   dashes always read as leaving the body/base outward, never crawling back
+   into it. The two closed shapes traced partly in ghost (Design's square,
+   Mobile's idle screen) are authored as one consistent loop traversal
+   instead, and Design's in the same direction as its corner pulse stagger,
+   so the march and the glow travel together rather than fighting.
+   -7 = one full `3 4` period, so the loop is seamless.
+
+   If a new ghost edge ever needs to read inward, author it outer -> inner
+   and give it its own positive-offset rule; do NOT flip this one. */
 .fig-edge.ghost {
   stroke-dasharray: 3 4;
   opacity: 0.35;
   stroke-width: 1.4;
+  animation: dashOut 1.2s linear infinite;
+}
+@keyframes dashOut {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -7;
+  }
 }
 .fig-node.ghost {
   opacity: 0.35;
@@ -1007,8 +1030,8 @@ a {
    hand's wrist coordinate IS a corner of the square, shared with two fixed
    <line> edges that terminate there, so independently rotating either
    shoulder pivot would carry that corner away from those edges, tearing
-   the square apart every frame. Life comes from the shared .pulse-node
-   rule below instead, staggered per corner in figures.tsx. */
+   the square apart every frame. Life comes from .square-breathe below and
+   from the dash march on the square's two ghost sides instead. */
 
 /* Design's square (see the .square-breathe <g> wrapping it in figures.tsx):
    a subtle independent grow/shrink + rise/fall, same rhythm as
@@ -1045,27 +1068,23 @@ a {
    Orchestrator's 4 pivots) was discarded in favor of this plainer version
    once the ribcage torso became the figure's actual identity. */
 
-.pulse-node {
-  animation: pulse 4s ease-in-out infinite;
-  animation-fill-mode: backwards;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: scale(1);
-  }
-  40% {
-    opacity: 1;
-    transform: scale(1.35);
-  }
-  70% {
-    opacity: 0.75;
-    transform: scale(1.05);
-  }
-}
+/* There used to be a third node treatment here: `.pulse-node`, a 4s
+   opacity+scale throb applied to whichever nodes a figure wanted to call
+   attention to. Removed entirely. A node's opacity now carries exactly one
+   meaning, readable at a glance and never ambiguous:
+
+     solid (.fig-node)        -- meets at least one solid line
+     dim   (.fig-node.ghost)  -- meets only dashed/ghost lines
+
+   A throbbing node spends that same opacity channel on animation, so a solid
+   structural joint at 0.55 was indistinguishable from a deliberately dim
+   ghost one, and the figure read as flickering rather than alive. Motion now
+   lives only where it can't be confused with meaning: `.figure-group`'s
+   breathe, the `.arm-*` sways, and the ghost dash march above.
+
+   Nodes enclosed by solid geometry but touching no line (DevOps' gear core,
+   Mobile's phone-screen glow, Mobile's glow sitting ON the solid spine)
+   count as solid -- the shape they belong to is solid. */
 
 /* respect OS-level reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -1077,7 +1096,7 @@ a {
   .arm-raise,
   .arm-lower,
   .square-breathe,
-  .pulse-node {
+  .fig-edge.ghost {
     animation: none !important;
   }
   /* The open/close fade is a separate, much smaller motion (a plain

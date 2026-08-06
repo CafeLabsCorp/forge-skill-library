@@ -50,7 +50,7 @@ function Node({
   cx: number;
   cy: number;
   r: number;
-  variant?: "crest" | "head" | "eye" | "jaw" | "neck" | "joint" | "pulse-node" | "ghost";
+  variant?: "crest" | "head" | "eye" | "jaw" | "neck" | "joint" | "ghost";
 }) {
   return <circle className={`fig-node${variant ? ` ${variant}` : ""}`} cx={cx} cy={cy} r={r} />;
 }
@@ -148,14 +148,14 @@ export function OrchestratorBody() {
         <Node cx={100} cy={38} r={6} variant="head" />
         <Node cx={94} cy={36} r={2} variant="eye" />
         <Node cx={106} cy={36} r={2} variant="eye" />
-        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
-        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
+        <Node cx={100} cy={82} r={4.5} variant="joint" />
         <Node cx={66} cy={72} r={4.5} variant="joint" />
         <Node cx={134} cy={72} r={4.5} variant="joint" />
-        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={112} r={4.5} variant="joint" />
         <Node cx={62} cy={108} r={4.5} variant="joint" />
         <Node cx={138} cy={108} r={4.5} variant="joint" />
-        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
         <Node cx={114} cy={152} r={3.5} variant="joint" />
         <Node cx={80} cy={215} r={3.5} variant="joint" />
@@ -234,7 +234,7 @@ export function ProductFace() {
       <Node cx={82} cy={74} r={3} variant="jaw" />
       <Node cx={94} cy={64} r={2} variant="joint" />
       <Node cx={104} cy={50} r={5} variant="ghost" />
-      <Node cx={104} cy={50} r={2.5} variant="pulse-node" />
+      <Node cx={104} cy={50} r={2.5} variant="ghost" />
     </svg>
   );
 }
@@ -282,12 +282,12 @@ export function ProductBody() {
         <Node cx={100} cy={38} r={6.5} variant="head" />
         <Node cx={94} cy={36} r={2} variant="eye" />
         <Node cx={106} cy={36} r={2} variant="eye" />
-        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
-        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
+        <Node cx={100} cy={82} r={4.5} variant="joint" />
         <Node cx={66} cy={72} r={4.5} variant="joint" />
         <Node cx={134} cy={72} r={4.5} variant="joint" />
-        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
-        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={112} r={4.5} variant="joint" />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
         <Node cx={114} cy={152} r={3.5} variant="joint" />
         <Node cx={78} cy={196} r={3.5} variant="joint" />
@@ -306,7 +306,7 @@ export function ProductBody() {
           <Node cx={176} cy={22} r={4} />
           <Edge x1={176} y1={22} x2={194} y2={-4} ghost />
           <Node cx={194} cy={-4} r={8} variant="ghost" />
-          <Node cx={194} cy={-4} r={4.5} variant="pulse-node" />
+          <Node cx={194} cy={-4} r={4.5} variant="ghost" />
         </g>
 
         {/* lowered arm (screen-left): fans into four dim ghost nodes —
@@ -387,7 +387,7 @@ export function DesignFace() {
       <Node cx={88} cy={70} r={3.2} variant="joint" />
       <Node cx={104} cy={66} r={2.5} variant="joint" />
       <Node cx={104} cy={84} r={2.4} variant="joint" />
-      <Node cx={122} cy={84} r={2.8} variant="pulse-node" />
+      <Node cx={122} cy={84} r={2.8} variant="joint" />
       <Node cx={122} cy={66} r={1.6} variant="ghost" />
     </svg>
   );
@@ -425,9 +425,9 @@ export function DesignFace() {
  * earlier pass that had this backwards -- top+right solid, left+bottom
  * dashed -- per Felipe's direct correction once he saw it described.)
  *
- * The square sits between y=64 (a few px below the neck pulse-node at
- * y=58, clear of its r=3.5) and y=142 (a few px above the hip pulse-node
- * at y=150 / hip joints at y=152), spanning x=45-161 -- clear of the legs
+ * The square sits between y=64 (a few px below the neck node at y=58,
+ * clear of its r=3.5) and y=142 (a few px above the pelvis node at y=150 /
+ * hip joints at y=152), spanning x=45-161 -- clear of the legs
  * (which stay within x=70-138 below y=150). It's 116x78 rather than a
  * mathematically perfect square, the same clearance trade-off the first
  * draft of this figure already had to make (that version landed on
@@ -447,13 +447,18 @@ export function DesignFace() {
  * corner away from those edges, tearing the shape apart every frame (the
  * same "wrong pivot" bug class the .arm-ul etc. CSS comments warn about,
  * here triggered by an arm/shape coupling instead of a bad
- * transform-origin). Life instead comes from `pulse-node` on all 4
- * corners, staggered 1s apart over the shared 4s cycle in drawing order,
- * starting and ending at the two held corners: bottom-left (0s) -> top-left
- * via the solid left edge (1s) -> top-right via the dashed top edge (2s)
- * -> bottom-right via the dashed right edge (3s) -- looping back to
- * bottom-left via the solid bottom edge, reading as a glow that
- * continuously re-traces the square's outline. */
+ * transform-origin). Life instead comes from the square's own
+ * `.square-breathe` scale/rise and from the dash march on its two ghost
+ * sides, which travels the same way the corners are drawn: top-left ->
+ * top-right -> bottom-right.
+ *
+ * The 4 corners used to be staggered pulse-nodes re-tracing the outline as
+ * a glow. Retired with every other pulsing node in the set (see the node
+ * fill rules in globals.css): a node's opacity now states what it's
+ * attached to -- solid where it meets a solid line, dim where it only meets
+ * dashed ones -- and can't also be spending that opacity on an animation.
+ * All 4 corners are solid: the two held ones meet a solid arm edge, the
+ * other two the square's solid left/bottom sides. */
 export function DesignBody() {
   return (
     <svg
@@ -484,12 +489,12 @@ export function DesignBody() {
         <Node cx={100} cy={38} r={6.5} variant="head" />
         <Node cx={94} cy={36} r={2} variant="eye" />
         <Node cx={106} cy={36} r={2} variant="eye" />
-        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
-        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
+        <Node cx={100} cy={82} r={4.5} variant="joint" />
         <Node cx={66} cy={72} r={4.5} variant="joint" />
         <Node cx={134} cy={72} r={4.5} variant="joint" />
-        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
-        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={112} r={4.5} variant="joint" />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
         <Node cx={114} cy={152} r={3.5} variant="joint" />
         <Node cx={76} cy={198} r={3.5} variant="joint" />
@@ -518,8 +523,8 @@ export function DesignBody() {
         {/* The square: 4 corners, 4 edges, self-contained. Left + bottom are
             solid (the pair meeting at the held bottom-left corner); top +
             right are dashed ghost (the pair meeting at the held top-right
-            corner). Corner pulse-nodes stagger 1s apart in drawing order:
-            bottom-left -> top-left -> top-right -> bottom-right. The whole
+            corner). All 4 corners are solid nodes -- each meets at least one
+            solid line (the two held ones via their arm edge). The whole
             shape is wrapped in `.square-breathe` -- a subtle independent
             grow/shrink + rise/fall, on the same rhythm as `.figure-group`'s
             own breathe but offset by its own animation-delay so the square
@@ -530,10 +535,10 @@ export function DesignBody() {
           <Edge x1={161} y1={142} x2={45} y2={142} />
           <Edge x1={45} y1={142} x2={45} y2={64} />
 
-          <circle className="fig-node pulse-node" cx={45} cy={142} r={4.5} style={{ animationDelay: "0s" }} />
-          <circle className="fig-node pulse-node" cx={45} cy={64} r={4.5} style={{ animationDelay: "1s" }} />
-          <circle className="fig-node pulse-node" cx={161} cy={64} r={4.5} style={{ animationDelay: "2s" }} />
-          <circle className="fig-node pulse-node" cx={161} cy={142} r={4.5} style={{ animationDelay: "3s" }} />
+          <Node cx={45} cy={142} r={4.5} variant="joint" />
+          <Node cx={45} cy={64} r={4.5} variant="joint" />
+          <Node cx={161} cy={64} r={4.5} variant="joint" />
+          <Node cx={161} cy={142} r={4.5} variant="joint" />
         </g>
       </g>
     </svg>
@@ -567,7 +572,7 @@ export function MobileFace() {
       <Edge x1={70} y1={26} x2={78} y2={20} ghost />
       <Node cx={70} cy={40} r={2.6} variant="crest" />
       <Node cx={70} cy={26} r={4} variant="ghost" />
-      <Node cx={70} cy={26} r={2} variant="pulse-node" />
+      <Node cx={70} cy={26} r={2} variant="ghost" />
       <Node cx={78} cy={20} r={1.6} variant="ghost" />
 
       {/* head */}
@@ -590,7 +595,7 @@ export function MobileFace() {
       <Node cx={58} cy={90} r={2.5} variant="joint" />
       <Node cx={82} cy={90} r={2.5} variant="joint" />
       <Node cx={70} cy={96} r={3} variant="neck" />
-      <Node cx={70} cy={82} r={2.2} variant="pulse-node" />
+      <Node cx={70} cy={82} r={2.2} variant="ghost" />
     </svg>
   );
 }
@@ -647,7 +652,7 @@ export function MobileBody() {
         <Edge x1={100} y1={8} x2={108} y2={2} ghost />
         <Node cx={100} cy={18} r={3} variant="crest" />
         <Node cx={100} cy={8} r={4.5} variant="ghost" />
-        <Node cx={100} cy={8} r={2.4} variant="pulse-node" />
+        <Node cx={100} cy={8} r={2.4} variant="ghost" />
         <Node cx={108} cy={2} r={2} variant="ghost" />
 
         {/* head */}
@@ -668,15 +673,15 @@ export function MobileBody() {
         <Edge x1={100} y1={112} x2={138} y2={108} />
         <Edge x1={100} y1={112} x2={100} y2={150} />
 
-        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
-        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
+        <Node cx={100} cy={82} r={4.5} variant="joint" />
         <Node cx={66} cy={72} r={4.5} variant="joint" />
         <Node cx={134} cy={72} r={4.5} variant="joint" />
         {/* screen glow: floats directly on the chest->hip spine segment
             rather than at a vertex, reading as content glowing behind the
             frame */}
-        <Node cx={100} cy={97} r={3} variant="pulse-node" />
-        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={97} r={3} variant="joint" />
+        <Node cx={100} cy={112} r={4.5} variant="joint" />
         <Node cx={62} cy={108} r={4.5} variant="joint" />
         <Node cx={138} cy={108} r={4.5} variant="joint" />
 
@@ -687,7 +692,7 @@ export function MobileBody() {
         <Edge x1={100} y1={150} x2={114} y2={152} />
         <Edge x1={114} y1={152} x2={120} y2={215} />
         <Edge x1={120} y1={215} x2={125} y2={278} />
-        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
         <Node cx={114} cy={152} r={3.5} variant="joint" />
         <Node cx={80} cy={215} r={3.5} variant="joint" />
@@ -716,7 +721,7 @@ export function MobileBody() {
           <Node cx={132} cy={16} r={2} variant="joint" />
           <Node cx={132} cy={32} r={2} variant="joint" />
           <Node cx={116} cy={32} r={2} variant="joint" />
-          <Node cx={124} cy={24} r={2.6} variant="pulse-node" />
+          <Node cx={124} cy={24} r={2.6} variant="joint" />
         </g>
 
         {/* Left arm: hangs relaxed at the torso's side, ending in a dim,
@@ -1102,7 +1107,7 @@ export function DevOpsBody() {
       <g className="figure-group">
         {/* gear crest */}
         <circle className="fig-loop" cx={100} cy={18} r={7} fill="none" stroke="currentColor" strokeWidth={2} />
-        <Node cx={100} cy={18} r={1.5} variant="pulse-node" />
+        <Node cx={100} cy={18} r={1.5} variant="joint" />
         <Edge x1={100} y1={11} x2={100} y2={7} />
         <Node cx={100} cy={7} r={1.3} variant="joint" />
         <Edge x1={93} y1={18} x2={89} y2={18} />
@@ -1116,21 +1121,20 @@ export function DevOpsBody() {
         <Node cx={94} cy={36} r={2} variant="eye" />
         <Node cx={106} cy={36} r={2} variant="eye" />
         <Edge x1={100} y1={38} x2={100} y2={58} />
-        <Node cx={100} cy={58} r={3.5} variant="pulse-node" />
+        <Node cx={100} cy={58} r={3.5} variant="joint" />
         <Edge x1={100} y1={58} x2={100} y2={82} />
 
         {/* torso: single asymmetric cycle-loop -- a "refresh" arrow, not
             two mirrored halves */}
-        <path className="fig-loop" d="M 96.2 106.7 A 22 22 0 1 1 120.7 92.5" fill="none" stroke="currentColor" strokeWidth={2} />
-        <Edge x1={120.7} y1={92.5} x2={118.3} y2={85.9} />
-        <Edge x1={120.7} y1={92.5} x2={126.7} y2={89.0} />
-        <Node cx={96.2} cy={106.7} r={2.4} variant="pulse-node" />
-        <Node cx={120.7} cy={92.5} r={1.8} variant="joint" />
+        <path className="fig-loop" d="M 96.2 112 A 22 22 0 1 1 120.7 96.8" fill="none" stroke="currentColor" strokeWidth={2} />
+        <Edge x1={120.7} y1={96.8} x2={118.3} y2={90.2} />
+        <Edge x1={120.7} y1={96.8} x2={126.7} y2={93.3} />
+        <Node cx={120.7} cy={96.8} r={1.8} variant="joint" />
 
         {/* shoulders -- shared skeleton, unchanged */}
         <Edge x1={100} y1={82} x2={66} y2={72} />
         <Edge x1={100} y1={82} x2={134} y2={72} />
-        <Node cx={100} cy={82} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={82} r={4.5} variant="joint" />
         <Node cx={66} cy={72} r={4.5} variant="joint" />
         <Node cx={134} cy={72} r={4.5} variant="joint" />
 
@@ -1141,13 +1145,13 @@ export function DevOpsBody() {
         <Edge x1={80} y1={116} x2={62} y2={108} />
         <Edge x1={100} y1={112} x2={120} y2={116} />
         <Edge x1={120} y1={116} x2={138} y2={108} />
-        <Node cx={100} cy={112} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={112} r={4.5} variant="joint" />
         <Node cx={62} cy={108} r={4.5} variant="joint" />
         <Node cx={138} cy={108} r={4.5} variant="joint" />
 
         {/* pelvis -> legs -> feet -- shared skeleton, unchanged */}
         <Edge x1={100} y1={112} x2={100} y2={150} />
-        <Node cx={100} cy={150} r={4.5} variant="pulse-node" />
+        <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Edge x1={100} y1={150} x2={86} y2={152} />
         <Edge x1={100} y1={150} x2={114} y2={152} />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
@@ -1171,8 +1175,8 @@ export function DevOpsBody() {
           <Node cx={54} cy={134} r={3} variant="joint" />
         </g>
 
-        {/* right arm: raised, reaching (not holding) toward a pulsing
-            status beacon -- ProductBody's "point at the riskiest
+        {/* right arm: raised, reaching (not holding) toward a dim status
+            beacon -- ProductBody's "point at the riskiest
             assumption" idiom, applied to monitoring. Beacon lives inside
             the same arm-ur group as the arm, so it sways rigidly with the
             reach instead of tearing away from it. */}
