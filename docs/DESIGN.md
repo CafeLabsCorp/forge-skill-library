@@ -82,30 +82,62 @@ starry-sky effect behind the wordmark.
 
 ## SVG figure system (per-agent portraits)
 
-The most distinctive element of the identity: each ready agent (`orchestrator`, `product`,
-`design`) has a portrait drawn as an SVG graph — nodes (`.fig-node`, circles) linked
-by edges (`.fig-edge`, lines), with all color inherited from `currentColor`/`--card-accent`.
-Implemented in `src/components/figures.tsx`:
+The most distinctive element of the identity: each `ready` agent has a portrait drawn
+as an SVG graph — nodes (`.fig-node`, circles) linked by edges (`.fig-edge`, lines),
+with all color inherited from `currentColor`/`--card-accent`.
+Implemented in `src/components/figures.tsx`. As of this round, 8 of the 12 agents have
+their own figure pair — `orchestrator`, `product`, `design`, `mobile`, `backend`,
+`frontend-web`, `devops`, `qa` (see `FACE_COMPONENTS`/`BODY_COMPONENTS` at the bottom of
+`figures.tsx`, and `docs/ARQUITETURA.md`'s "Data flow" section for how `ready` gates
+which agents get one).
 
-- **Face** (small, 10–12 nodes) — used on the gallery card.
-- **Body** (full body, 28–32 nodes) — used in the modal, with 2 or 4 animated "arms"
+- **Face** (small, ~10–14 nodes) — used on the gallery card, cropped at the shoulders.
+- **Body** (full body, 28–34 nodes) — used in the modal, with 2 or 4 animated "arms"
   (each its own `<g>`, pivoting via `transform-box: view-box` at its own
-  shoulder coordinate) that give each agent its own, non-interchangeable pose:
-  - **Orchestrator**: 4 symmetric arms "conducting" (a coordinating posture).
+  shoulder coordinate) that give each agent its own, non-interchangeable pose. All 8
+  bodies share the same base head/neck/hip/leg skeleton coordinates; individuality lives
+  in the arms, the torso shape, and — where the agent has one — a head crest:
+  - **Orchestrator**: 4 symmetric arms "conducting" (a coordinating posture); plain
+    diamond torso.
   - **Product**: 2 asymmetric arms — one raised, pointing at an isolated node
     (the riskiest hypothesis), the other lowered, branching into 4 ghost nodes
-    (discarded hypotheses).
-  - **Design**: 2 asymmetric arms — one becomes a "brush" with a flowing ink
-    spiral (`stroke-dashoffset` animated, 17 segments with staggered delay to look
-    like one continuous stroke), the other forms an "L" framing/viewfinder shape with dashed
-    ghost edges.
+    (discarded hypotheses); plain torso.
+  - **Design**: both arms hold two opposite corners of one shared square traced in
+    front of the body — 2 solid sides (committed) and 2 dashed ghost sides (still being
+    sketched), a reference to "forming a large square with your hands" (Itaú's logo
+    gesture, per Felipe's brief). The arms are static — rotating them would tear the
+    square's shared corners apart.
+  - **Mobile**: torso is a "screen frame" (rounded-rect bezel) instead of the plain
+    diamond, with a pulsing glow on the spine inside it; head carries an antenna/status-
+    light crest with a notification-badge dot. Right arm bends up holding a small
+    phone-shaped rectangle beside the head; left arm hangs relaxed, ending in a dim,
+    only-3-sided ghost rectangle (an idle second screen).
+  - **Backend**: torso is 4 stacked horizontal ribs (`Rib`, an arc primitive — the only
+    figure whose torso isn't the shared straight spine), echoing a database-cylinder icon
+    ("as costelas do humanoide", per Felipe's brief); plain 2-arm pose (shoulder → elbow
+    → wrist, no held object).
+  - **Frontend Web**: torso is two large tag brackets (`<` `>`) cradling a dashed
+    "blinking cursor" between them; the feet echo the same bracket angle at a smaller
+    scale. Plain 2-arm pose.
+  - **DevOps**: torso is one continuous circular arc with a visible arrowhead end (a
+    "refresh"/cycle glyph), not two mirrored halves like the others. Right arm raised,
+    reaching via a dashed edge toward a pulsing status-beacon node (monitoring/alerting);
+    left arm relaxed at its own angle.
+  - **QA**: torso is a 3-tier test pyramid (E2E / widget / unit, 1/3/5 dots per tier) —
+    the only torso that widens downward. Right arm drops to a hinge and holds a
+    horizontal "gate" boom across the body (solid behind the bar, dashed ahead of it);
+    left arm cups the pyramid's wide base from below.
 - **`SeedGraph`** — a deterministic generic graph (keyed by index `seed`, not random —
   avoiding a mismatch between server/client rendering) used for agents that don't have their own
   figure yet and for the "unavailable" state.
 
 Each figure's coordinates were ported 1:1 from HTML mockups validated outside this
 repo (noted in a comment at the top of `figures.tsx`) — they aren't "re-art directed" in the
-conversion to JSX, just re-expressed.
+conversion to JSX, just re-expressed. Every figure went through multiple discarded
+drafts before landing on the version described above (documented as comments directly
+above each component in `figures.tsx` — e.g. Backend's torso took 5 passes, DevOps' 3);
+read those comments for the full design rationale/history behind a specific figure
+rather than duplicating it here.
 
 ## Brand mark and favicon
 

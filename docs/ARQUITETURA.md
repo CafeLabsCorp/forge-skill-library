@@ -38,8 +38,10 @@ Mechanics (`getAgents()` in `src/lib/agents.ts`):
    frontmatter), only that card becomes "Unavailable" — it doesn't take down the build
    or the whole page.
 5. Regardless of the fetch outcome, each agent has a `ready` flag decided here in this repo
-   (currently hardcoded for `orchestrator`, `product`, and `design` in
-   `AGENT_CONFIGS`/`fetchAgent`) — it controls whether the card shows the "Soon" tag and
+   (currently hardcoded in `fetchAgent`, `src/lib/agents.ts`, for `orchestrator`, `product`,
+   `design`, `mobile`, `backend`, `frontend-web`, `devops`, and `qa` — 8 of the 12 agents
+   listed in `AGENT_CONFIGS`; `security`, `compliance`, `analytics`, and `docs` are not yet
+   ready) — it controls whether the card shows the "Soon" tag and
    whether the modal shows the full prompt or a "not yet designed" message. An agent can have
    `ready: true` and still show up as unavailable if the fetch fails at
    build time (`unavailable` is independent from `ready`).
@@ -52,6 +54,47 @@ build time (not in the browser at runtime), updating an agent's content in the
 incremental revalidation configured (`next.config.ts` doesn't define `revalidate`/ISR;
 TODO: confirm whether this is intentional or a gap to close once Forge updates
 prompts more frequently).
+
+## End-to-end trace: viewing and copying the Orchestrator's prompt
+
+One concrete pass through every layer, from build time to a click in the browser,
+using the `orchestrator` agent as the example (it's `ready`, so it exercises the
+full path rather than the "unavailable"/"not yet designed" fallbacks):
+
+1. **Build time, server** — `getAgents()` (`src/lib/agents.ts`) iterates
+   `AGENT_CONFIGS`, finds the `{ id: "orchestrator", num: "01", role: "Tech Lead /
+   Coordinator", accentVar: "--orchestrator" }` entry, and calls `fetchAgent(config)`
+   for it (in parallel with the other 11, via `Promise.all`).
+2. `fetchAgent` does `fetch("https://raw.githubusercontent.com/CafeLabsCorp/forge/main/agents/orchestrator.md")`.
+   On success, `parseFrontmatter(raw)` regex-extracts `name:` and `description:` from
+   the file's YAML frontmatter; `titleCase(parsed.name)` turns the kebab-case
+   `orchestrator` into the display name `"Orchestrator"`. The full raw file text
+   (frontmatter + prompt body) is kept verbatim as `content`. The function returns an
+   `AgentCardData` with `ready: true` (orchestrator is in the hardcoded ready list) and
+   `unavailable: false`.
+3. `src/app/[locale]/page.tsx` (an `async` Server Component) calls `getAgents()` once
+   per request/build and passes the resulting array as `agents` to
+   `<AgentGallery agents={agents} />`.
+4. **Render** — `AgentGallery` (client component) maps each `AgentCardData` to an
+   `<AgentCard agent={...} />`. Because `agent.ready` is true, `AgentCard` looks up
+   `OrchestratorFace` in the face-component map (`src/components/figures.tsx`) and
+   renders it as the card's portrait, alongside the id, name, role, and a
+   2-line-truncated description; no "Soon"/"Unavailable" tag is shown.
+5. **User interaction** — clicking the card `<button>` calls the `onOpen` handler
+   `AgentGallery` passed down, which sets its `openAgent` state to the orchestrator's
+   `AgentCardData`. That state change re-renders the single shared `<AgentModal />`
+   with `agent={openAgent}` and `isOpen={true}`.
+6. `AgentModal` (client component) traps focus, moves it to its close button, renders
+   `OrchestratorBody` (the full-body figure) next to the agent's name/role, and —
+   because `ready && content` are both truthy — renders the full raw `content` string
+   inside `.prompt-body` (monospace) together with a `<CopyButton text={content} />`.
+7. Clicking "Copy" runs `CopyButton`'s handler: it first tries
+   `navigator.clipboard.writeText(content)`; if that throws (e.g. an insecure context
+   or a permissions-policy block), it falls back to `document.execCommand("copy")` on a
+   hidden `<textarea>`, and if that also fails, it selects the visible prompt text so
+   the user can do a manual Ctrl+C. No network request and no write happen anywhere in
+   this step — the "mutation" is entirely local browser state (the clipboard), which is
+   consistent with this site having no backend of its own (see "Data flow" above).
 
 ## Routes and page composition
 
@@ -157,6 +200,8 @@ C") correctly localized without hardcoding the connective.
   individual try/catch) is an explicit choice so that a temporary GitHub raw content
   instability doesn't take down the whole page — it only degrades the affected card(s).
 - **`ready` is a manual switch in this repo, not a property of the agent in the
-  `forge` repo.** Today only 3 of the 12 agents are marked as ready; the others exist in
+  `forge` repo.** Today 8 of the 12 agents are marked as ready (`orchestrator`,
+  `product`, `design`, `mobile`, `backend`, `frontend-web`, `devops`, `qa`); the
+  remaining 4 (`security`, `compliance`, `analytics`, `docs`) exist in
   Forge but don't yet have the visual treatment (a dedicated figure) nor have been "approved" to
   show the full prompt here.

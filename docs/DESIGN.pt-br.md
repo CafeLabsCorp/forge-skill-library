@@ -82,30 +82,68 @@ de céu estrelado atrás do wordmark.
 
 ## Sistema de figuras SVG (retratos por agente)
 
-O elemento mais distinto da identidade: cada agente pronto (`orchestrator`, `product`,
-`design`) tem um retrato desenhado como grafo SVG — nós (`.fig-node`, círculos) ligados
-por arestas (`.fig-edge`, linhas), toda a cor herdada de `currentColor`/`--card-accent`.
-Implementado em `src/components/figures.tsx`:
+O elemento mais distinto da identidade: cada agente `ready` tem um retrato desenhado
+como grafo SVG — nós (`.fig-node`, círculos) ligados por arestas (`.fig-edge`,
+linhas), toda a cor herdada de `currentColor`/`--card-accent`.
+Implementado em `src/components/figures.tsx`. Nesta rodada, 8 dos 12 agentes têm seu
+próprio par de figuras — `orchestrator`, `product`, `design`, `mobile`, `backend`,
+`frontend-web`, `devops`, `qa` (ver `FACE_COMPONENTS`/`BODY_COMPONENTS` no fim de
+`figures.tsx`, e a seção "Fluxo de dados" de `docs/ARQUITETURA.pt-br.md` pra entender
+como `ready` decide quais agentes ganham uma).
 
-- **Face** (pequena, 10–12 nós) — usada no card da galeria.
-- **Body** (corpo inteiro, 28–32 nós) — usada no modal, com 2 ou 4 "braços" animados
+- **Face** (pequena, ~10–14 nós) — usada no card da galeria, cortada nos ombros.
+- **Body** (corpo inteiro, 28–34 nós) — usada no modal, com 2 ou 4 "braços" animados
   (cada um seu próprio `<g>`, pivotando em `transform-box: view-box` na própria
-  coordenada do ombro) que dão a cada agente uma pose própria e não intercambiável:
-  - **Orchestrator**: 4 braços simétricos "conduzindo" (postura de coordenação).
+  coordenada do ombro) que dão a cada agente uma pose própria e não intercambiável.
+  Os 8 corpos compartilham as mesmas coordenadas de esqueleto base
+  (cabeça/pescoço/quadril/pernas); a individualidade está nos braços, na forma do
+  torso e, quando o agente tem uma, numa crista na cabeça:
+  - **Orchestrator**: 4 braços simétricos "conduzindo" (postura de coordenação); torso
+    em losango simples.
   - **Product**: 2 braços assimétricos — um levantado apontando pra um nó isolado
     (a hipótese mais arriscada), outro baixo se ramificando em 4 nós fantasmas
-    (hipóteses descartadas).
-  - **Design**: 2 braços assimétricos — um vira um "pincel" com uma espiral de tinta
-    fluindo (`stroke-dashoffset` animado, 17 segmentos com delay escalonado pra parecer
-    um traço contínuo), o outro forma um "L" de enquadramento/viewfinder com arestas
-    tracejadas fantasmas.
+    (hipóteses descartadas); torso simples.
+  - **Design**: os dois braços seguram dois cantos opostos de um quadrado
+    compartilhado traçado à frente do corpo — 2 lados sólidos (comprometidos) e 2
+    lados tracejados fantasmas (ainda sendo esboçados), referência a "formar um
+    quadrado grande com as mãos" (o gesto do símbolo do Itaú, conforme o briefing do
+    Felipe). Os braços são estáticos — girá-los rasgaria os cantos compartilhados do
+    quadrado.
+  - **Mobile**: o torso é um "frame de tela" (moldura arredondada) em vez do losango
+    simples, com um glow pulsante na espinha dentro dele; a cabeça carrega uma crista
+    de antena/luz de status com um ponto de "notificação". O braço direito dobra pra
+    cima segurando um retângulo em formato de telefone junto à cabeça; o braço
+    esquerdo pende relaxado, terminando num retângulo fantasma de só 3 lados, tênue
+    (uma segunda tela ociosa).
+  - **Backend**: o torso é feito de 4 arcos horizontais empilhados (`Rib`, um
+    primitivo de arco — a única figura cujo torso não é a espinha reta compartilhada),
+    ecoando um ícone de cilindro de banco de dados ("as costelas do humanoide",
+    conforme o briefing do Felipe); pose simples de 2 braços (ombro → cotovelo →
+    pulso, sem objeto segurado).
+  - **Frontend Web**: o torso é feito de dois colchetes grandes de tag (`<` `>`)
+    envolvendo um "cursor piscante" tracejado entre eles; os pés ecoam o mesmo ângulo
+    dos colchetes em escala menor. Pose simples de 2 braços.
+  - **DevOps**: o torso é um único arco circular contínuo com uma ponta de seta
+    visível (um glifo de "refresh"/ciclo), não duas metades espelhadas como os
+    demais. Braço direito levantado, alcançando via aresta tracejada um nó pulsante
+    de "beacon" de status (monitoramento/alertas); braço esquerdo relaxado no seu
+    próprio ângulo.
+  - **QA**: o torso é uma pirâmide de testes em 3 níveis (E2E / widget / unit, 1/3/5
+    pontos por nível) — o único torso que se alarga pra baixo. O braço direito desce
+    até uma dobradiça e segura um braço horizontal de "portão" atravessando o corpo
+    (sólido atrás da barra, tracejado à frente dela); o braço esquerdo apoia a base
+    larga da pirâmide por baixo.
 - **`SeedGraph`** — grafo genérico determinístico (por índice `seed`, não aleatório —
   evita divergência entre render de servidor/cliente) usado para os agentes ainda sem
   figura própria e para o estado "unavailable".
 
 As coordenadas de cada figura foram portadas 1:1 de mockups HTML validados fora deste
 repo (comentado no topo de `figures.tsx`) — não são "re-art directed" na conversão para
-JSX, só reexpressas.
+JSX, só reexpressas. Cada figura passou por vários rascunhos descartados antes de
+chegar à versão descrita acima (documentado como comentários diretamente acima de cada
+componente em `figures.tsx` — ex.: o torso do Backend levou 5 passadas, o do DevOps 3);
+leia esses comentários pro histórico/racional de design completo por trás de uma figura
+específica em vez de duplicá-lo aqui.
 
 ## Marca e favicon
 

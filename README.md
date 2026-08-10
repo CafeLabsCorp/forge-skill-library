@@ -51,6 +51,14 @@ npm run start   # serve the production build
 npm run lint    # eslint
 ```
 
+## Tests
+
+There is no test suite in this repository — no `*.test.*`/`*.spec.*` files, no test
+runner (Jest, Vitest, Playwright, ...) in `package.json`, and no `test` script. `npm run
+lint` (ESLint via `eslint-config-next`) is the only automated check currently
+available; there's no separate setup (no emulator, no service to start, no
+second `npm install` in a subdirectory) needed to run it.
+
 ## Folder structure
 
 ```
