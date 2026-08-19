@@ -1008,6 +1008,29 @@ export function FrontendWebBody() {
         <Node cx={106} cy={36} r={2} variant="eye" />
         <Node cx={100} cy={58} r={3.5} variant="joint" />
 
+        {/* Spider mouth: 4 small ghost fangs -- outer two bent (`<`/`>`,
+            same 2-edge chevron construction as the leg pairs, just wider/
+            shallower), inner two plain straight edges (Felipe: "quero que
+            tenha 2 assim <> e 2 retos"). Widened the whole layout so the
+            straight pair sits a real 7px off the neck line instead of 1-3px
+            -- that first pass had them close enough to read as part of the
+            neck stroke and disappear ("ficaram mt perto do pescoço...
+            sumidos"). Same ghost treatment (dashed/dim/marching, head=inner
+            -> tip=outer) as everything else that isn't a solid limb.
+            Left-to-right: bent, straight, [neck], straight, bent. */}
+        <Edge x1={90} y1={43} x2={83} y2={48} ghost />
+        <Edge x1={83} y1={48} x2={87} y2={55} ghost />
+        <Node cx={83} cy={48} r={1.3} variant="ghost" />
+        <Node cx={87} cy={55} r={1.3} variant="ghost" />
+        <Edge x1={96} y1={43} x2={93} y2={53} ghost />
+        <Node cx={93} cy={53} r={1.3} variant="ghost" />
+        <Edge x1={104} y1={43} x2={107} y2={53} ghost />
+        <Node cx={107} cy={53} r={1.3} variant="ghost" />
+        <Edge x1={110} y1={43} x2={117} y2={48} ghost />
+        <Edge x1={117} y1={48} x2={113} y2={55} ghost />
+        <Node cx={117} cy={48} r={1.3} variant="ghost" />
+        <Node cx={113} cy={55} r={1.3} variant="ghost" />
+
         {/* torso: the plain shared skeleton, deliberately. The brackets
             moved out to the arms (see below), so nothing competes with them
             here -- same restraint that lets Product's and DevOps' poses
@@ -1019,34 +1042,73 @@ export function FrontendWebBody() {
         <Node cx={66} cy={72} r={4.5} variant="joint" />
         <Node cx={134} cy={72} r={4.5} variant="joint" />
         <Edge x1={100} y1={82} x2={100} y2={112} />
-        <Edge x1={100} y1={112} x2={62} y2={108} />
-        <Edge x1={100} y1={112} x2={138} y2={108} />
+        {/* Ribcage bracket edges ghosted too, matching the leg pair they
+            feed into just below -- a solid bracket suddenly sprouting a
+            dashed leg read as two disconnected pieces (Felipe). Spine stays
+            solid; only the branch toward the ghost legs fades. */}
+        <Edge x1={100} y1={112} x2={62} y2={108} ghost />
+        <Edge x1={100} y1={112} x2={138} y2={108} ghost />
         <Node cx={100} cy={112} r={4.5} variant="joint" />
-        <Node cx={62} cy={108} r={4.5} variant="joint" />
-        <Node cx={138} cy={108} r={4.5} variant="joint" />
+        <Node cx={62} cy={108} r={2.5} variant="ghost" />
+        <Node cx={138} cy={108} r={2.5} variant="ghost" />
 
-        {/* pelvis -> thighs -> knees -- shared skeleton */}
+        {/* pelvis -> thighs -> knees -- shared skeleton up to the hip */}
         <Edge x1={100} y1={112} x2={100} y2={150} />
         <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Edge x1={100} y1={150} x2={86} y2={152} />
         <Edge x1={100} y1={150} x2={114} y2={152} />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
         <Node cx={114} cy={152} r={3.5} variant="joint" />
-        <Edge x1={86} y1={152} x2={80} y2={215} />
-        <Edge x1={114} y1={152} x2={120} y2={215} />
-        <Node cx={80} cy={215} r={3.5} variant="joint" />
-        <Node cx={120} cy={215} r={3.5} variant="joint" />
 
-        {/* shins -> feet -- the plain shared skeleton every other figure
-            uses. These used to be tag brackets echoing the torso at smaller
-            scale, on the theory that the figure should read head-to-toe as
-            one idea; dropped at Felipe's request. The bracket read never
-            survived at foot scale anyway -- with the ankle inside the
-            bracket rather than on the shin line, the leg looked broken. */}
-        <Edge x1={80} y1={215} x2={75} y2={278} />
-        <Edge x1={120} y1={215} x2={125} y2={278} />
-        <Node cx={75} cy={278} r={4} variant="joint" />
-        <Node cx={125} cy={278} r={4} variant="joint" />
+        {/* Legs redone as `<`/`>` chevrons -- the same bracket motif as the
+            arms, but on the legs instead of the torso brackets this figure
+            already tried once (see the retired comment this replaced): that
+            earlier attempt kept the ankle where a natural shin would put it,
+            so the bracket read as a broken leg rather than a glyph. This
+            version leans into the break instead of hiding it -- the knee
+            juts out much further than either the hip or the foot (52px off
+            the spine vs. 14px at the hip and 22px at the foot), closer to a
+            spider's leg than a human one, on purpose: Felipe's brief. Left
+            leg opens to the right (`<`), right leg opens to the left (`>`),
+            mirrored around the spine (x=100) same as everywhere else in this
+            figure. No diagonal slash on either leg -- that motif stays put
+            on the head crest so it isn't read twice on the same body. */}
+        <Edge x1={86} y1={152} x2={48} y2={196} />
+        <Edge x1={48} y1={196} x2={78} y2={278} />
+        <Node cx={48} cy={196} r={3.5} variant="joint" />
+        <Edge x1={114} y1={152} x2={152} y2={196} />
+        <Edge x1={152} y1={196} x2={122} y2={278} />
+        <Node cx={152} cy={196} r={3.5} variant="joint" />
+        <Node cx={78} cy={278} r={4} variant="joint" />
+        <Node cx={122} cy={278} r={4} variant="joint" />
+
+        {/* Second leg pair -- 4 legs total, reading as two `<>` motifs
+            stacked instead of one (Felipe: "4 pernas, formando 2 </></>").
+            Sprouts from the ribcage bracket's own joints (62,108)/(138,108)
+            rather than new attachment points, per his call on where the
+            second pair should branch from. Same chevron construction as the
+            lower pair, just consistently further from the spine at every
+            stage (38/78/50px vs. the lower pair's 14/52/22px) so the two
+            pairs fan out rather than tracing the same line twice.
+
+            Drawn as ghost (dashed, dim, marching outward) rather than solid:
+            with both pairs solid the crossing near the arm wrists
+            (66,136)/(134,136) read as tangled/"misturado" (Felipe) instead
+            of as two distinct pairs. Ghosting the pair that's higher up the
+            torso pushes it visually behind the solid lower pair and the
+            arms, so the read becomes foreground legs + implied legs behind
+            them, not four competing solid lines. Authored inner (rib joint)
+            -> outer (knee) -> outer (foot), same direction rule as every
+            other ghost edge in this file (see the .fig-edge.ghost comment
+            in globals.css), so the dash march reads as leaving the torso. */}
+        <Edge x1={62} y1={108} x2={22} y2={158} ghost />
+        <Edge x1={22} y1={158} x2={50} y2={268} ghost />
+        <Node cx={22} cy={158} r={2.5} variant="ghost" />
+        <Edge x1={138} y1={108} x2={178} y2={158} ghost />
+        <Edge x1={178} y1={158} x2={150} y2={268} ghost />
+        <Node cx={178} cy={158} r={2.5} variant="ghost" />
+        <Node cx={50} cy={268} r={2.5} variant="ghost" />
+        <Node cx={150} cy={268} r={2.5} variant="ghost" />
 
         {/* THE motif: each arm bends into one tag bracket, so the body
             stands inside `< >`. Elbow swings out past the hips and the
