@@ -753,20 +753,35 @@ a {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
+  /* Without this, `overflow: hidden` (needed for the max-height open/close
+     animation) also zeroes this item's automatic flex-shrink minimum, so a
+     long prompt in the sibling `.prompt-body` -- which wants far more
+     height than the modal has -- shrinks THIS row too, silently, below its
+     own padding + line-height. That's what actually read as "cortando":
+     not the padding value, a real flex-shrink bug that only showed up on
+     long-enough prompts. `.prompt-body` is the one row meant to give up
+     space here; this one never should. */
+  flex-shrink: 0;
   padding: 0 26px;
   background: hsl(var(--card-accent) / 0.12);
   border-bottom: 1px solid transparent;
   font-size: 13px;
+  line-height: 1.6;
   color: var(--text-dim);
   transition:
     max-height 0.25s ease,
     opacity 0.2s ease,
     padding 0.25s ease;
 }
+/* Room for one wrapped line at ~1.6 line-height (13px * 1.6 ~= 21px) plus
+   20px top/bottom padding, twice over (2 lines is the realistic worst
+   case at this width) -- was 80px/12px, which read as cramped/cut against
+   the text's own descenders (Felipe: "parece q ta cortando" -- this row,
+   not the prompt body below, which is a separate fade fix). */
 .install-nudge[data-visible="true"] {
-  max-height: 80px;
+  max-height: 104px;
   opacity: 1;
-  padding: 12px 26px;
+  padding: 20px 26px;
   border-bottom-color: var(--border);
 }
 .install-nudge button {
@@ -800,6 +815,15 @@ a {
   flex: 1 1 auto;
   min-height: 0;
   max-height: calc(min(86vh, 900px) - 200px);
+  /* Long prompts always end mid-sentence at the modal's bottom edge, since
+     that edge is just where the scroll container stops, not the end of the
+     content -- a hard cut with no gradient reads as broken/truncated
+     (Felipe: "parece q ta cortando") rather than "scroll for more". This
+     fades the last 32px to transparent so the cut reads as an edge, not a
+     clip. Top isn't faded: the view always starts scrolled to the top, so
+     there's nothing above to hint at yet. */
+  mask-image: linear-gradient(to bottom, black calc(100% - 32px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 32px), transparent 100%);
 }
 .prompt-empty {
   color: var(--text-dim);
