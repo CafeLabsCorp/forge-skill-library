@@ -1085,6 +1085,48 @@ a {
   }
 }
 
+/* Design's two legs (see the `.leg-left`/`.leg-right` <g>s in figures.tsx,
+   each holding its full hip-to-foot chain). Same view-box-pivot rule as
+   every limb above, origin pinned at this figure's own hip joints (86,152 /
+   114,152). Amplitude is deliberately smaller than the arm sways (+-2deg vs
+   +-3/4deg) -- these aren't reaching for anything, just a standing figure
+   shifting weight, and the ~120px hip-to-foot lever already turns a couple
+   degrees into a visible swing. The two legs run opposite phase (strideA
+   mirrors strideB) so the motion reads as alternating weight shift, not
+   both legs kicking the same way. */
+.leg-left {
+  transform-box: view-box;
+  transform-origin: 86px 152px;
+  animation: strideA 4.4s ease-in-out infinite;
+  animation-delay: 0.2s;
+  animation-fill-mode: backwards;
+}
+.leg-right {
+  transform-box: view-box;
+  transform-origin: 114px 152px;
+  animation: strideB 4.4s ease-in-out infinite;
+  animation-delay: 0.7s;
+  animation-fill-mode: backwards;
+}
+@keyframes strideA {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+@keyframes strideB {
+  0%,
+  100% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+}
+
 /* Backend's 2 arms reuse Orchestrator's arm-ul/arm-ur rules above directly
    (see BackendBody in figures.tsx) -- same 2 shoulder pivots, same sway, no
    held object and no separate rules needed here. An earlier 4-armed pass
@@ -1120,6 +1162,8 @@ a {
   .arm-raise,
   .arm-lower,
   .square-breathe,
+  .leg-left,
+  .leg-right,
   .fig-edge.ghost {
     animation: none !important;
   }

@@ -479,10 +479,6 @@ export function DesignBody() {
         <Edge x1={100} y1={112} x2={100} y2={150} />
         <Edge x1={100} y1={150} x2={86} y2={152} />
         <Edge x1={100} y1={150} x2={114} y2={152} />
-        <Edge x1={86} y1={152} x2={76} y2={198} />
-        <Edge x1={76} y1={198} x2={70} y2={266} />
-        <Edge x1={114} y1={152} x2={126} y2={192} />
-        <Edge x1={126} y1={192} x2={138} y2={258} />
 
         <Node cx={80} cy={20} r={3.5} variant="crest" />
         <Node cx={118} cy={16} r={2.6} variant="crest" />
@@ -497,10 +493,37 @@ export function DesignBody() {
         <Node cx={100} cy={150} r={4.5} variant="joint" />
         <Node cx={86} cy={152} r={3.5} variant="joint" />
         <Node cx={114} cy={152} r={3.5} variant="joint" />
-        <Node cx={76} cy={198} r={3.5} variant="joint" />
-        <Node cx={126} cy={192} r={3.5} variant="joint" />
-        <Node cx={70} cy={266} r={4} variant="joint" />
-        <Node cx={138} cy={258} r={4} variant="joint" />
+
+        {/* Legs -- unlike every other figure's shared static skeleton (see
+            MobileBody's "legs -- fixed, unanimated" comment), Design's
+            already diverge from that skeleton in shape (this figure's own
+            stance, not a reused pair of straight drops), so animating them
+            doesn't touch the shared convention. Each leg is one <g> holding
+            its full hip-to-foot chain -- same rule every limb in this file
+            follows (see the arm-ul/ur comment above): the <g> must start
+            its own path exactly at the pivot coordinate, or rotating around
+            that pivot tears the limb loose from a fixed edge ending there.
+            So unlike the shoulder/hip *nodes* (left outside each limb's
+            group since the torso draws them), the hip-to-knee edges move
+            inside their leg's <g> along with the knee-to-foot edge -- both
+            segments need to swing together as one rigid piece. Rotation is
+            deliberately small (+-2deg) and the two legs run out of phase
+            (strideA/strideB below), reading as a slight alternating weight
+            shift rather than a stride -- big enough to feel alive, small
+            enough that the foot's arc (~120px lever) never approaches the
+            square's lowest edge at y=142 or crosses the other leg. */}
+        <g className="leg-left">
+          <Edge x1={86} y1={152} x2={76} y2={198} />
+          <Edge x1={76} y1={198} x2={70} y2={266} />
+          <Node cx={76} cy={198} r={3.5} variant="joint" />
+          <Node cx={70} cy={266} r={4} variant="joint" />
+        </g>
+        <g className="leg-right">
+          <Edge x1={114} y1={152} x2={126} y2={192} />
+          <Edge x1={126} y1={192} x2={138} y2={258} />
+          <Node cx={126} cy={192} r={3.5} variant="joint" />
+          <Node cx={138} cy={258} r={4} variant="joint" />
+        </g>
 
         {/* Right arm: shoulder -> elbow -> top-right corner (held). Ends
             exactly at the corner node declared below with the rest of the
