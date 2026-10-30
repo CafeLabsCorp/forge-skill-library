@@ -5,6 +5,7 @@ import { InstallSection } from "@/components/InstallSection";
 import { MiniNav } from "@/components/MiniNav";
 import { ForgeIcon } from "@/components/ForgeIcon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { FORGE_REPO_URL } from "@/lib/site";
 
 export default async function Home() {
@@ -19,7 +20,10 @@ export default async function Home() {
       <MiniNav />
 
       <header className="hero stars">
-        <LanguageSwitcher className="hero-lang-switch" />
+        <div className="hero-controls">
+          <ThemeToggle />
+          <LanguageSwitcher />
+        </div>
         <div className="hero-mark">
           <ForgeIcon className="hero-icon" />
           <div className="hero-name-wrap">

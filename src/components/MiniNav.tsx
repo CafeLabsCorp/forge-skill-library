@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ForgeIcon } from "@/components/ForgeIcon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 /**
  * Hidden until the hero scrolls out of view — gives a way back to the
@@ -31,7 +32,10 @@ export function MiniNav() {
       </span>
       <a href="#gallery">{t("agents")}</a>
       <a href="#install">{t("install")}</a>
-      <LanguageSwitcher className="mini-nav-lang-switch" />
+      <div className="mini-nav-controls">
+        <ThemeToggle />
+        <LanguageSwitcher />
+      </div>
     </nav>
   );
 }

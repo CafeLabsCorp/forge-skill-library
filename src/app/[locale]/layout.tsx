@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bebas_Neue } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { ThemeProvider } from "next-themes";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
@@ -55,9 +56,13 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang={locale} className={displayFont.variable}>
+    // suppressHydrationWarning: next-themes põe data-theme no <html> antes
+    // de o React hidratar (script anti-flash), o que difere do HTML do servidor.
+    <html lang={locale} className={displayFont.variable} suppressHydrationWarning>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

@@ -26,6 +26,91 @@
   --docs: 100 38% 52%;
 
   --radius-card: 18px;
+
+  /* Non-agent colors that change with the theme. The amber of the logo
+     hexagon and the hero CTA is a fill, not text, so it stays the bright
+     brand amber in both themes (manual: "ambar"); --orchestrator is the
+     text-safe version and darkens in light mode ("ambar-texto"). */
+  --brand-amber: 38 85% 58%;
+  --nav-bg: rgba(18, 20, 24, 0.82);
+  --backdrop: rgba(4, 5, 6, 0.72);
+  --focus-ring: #fff;
+  --on-accent: #0a0b0d;
+  --unavailable: hsl(355 70% 74%);
+}
+
+/* Light theme ("papel técnico"): cool blue-gray paper with a drafting grid
+   instead of the constellation, so the brand amber is the warm accent.
+   Agent colors are the brand manual's light values (cafelabs-vault,
+   marca/forge/manual/forge-tokens.json), darker so they read as text on the
+   light background (>= 4.5:1). Follows the system unless the visitor picked
+   a theme in the toggle (next-themes sets data-theme on <html>). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #e6ebf0;
+    --bg-raised: #dbe2e9;
+    --bg-panel: #f4f6f8;
+    --border: rgba(30, 58, 95, 0.14);
+    --border-strong: rgba(30, 58, 95, 0.26);
+    --text: #16191e;
+    --text-dim: #475262;
+    --text-faint: #5b6676;
+
+    --orchestrator: 38 85% 31%; /* #92610C */
+    --product: 165 59% 30%; /* #1F7A63 */
+    --design: 320 68% 46%; /* #C52690 */
+    --mobile: 145 52% 32%; /* #277C4B */
+    --backend: 250 58% 59%; /* #6E5AD3 */
+    --frontend-web: 200 75% 36%; /* #1773A1 */
+    --devops: 221 14% 45%; /* #636D83 */
+    --qa: 15 78% 42%; /* #BF4118 */
+    --security: 355 62% 49%; /* #CA2F3C */
+    --compliance: 65 70% 26%; /* #697114 */
+    --analytics: 275 58% 54%; /* #9546CE */
+    --docs: 100 38% 34%; /* #4C7836 */
+
+    --grid-major: rgba(30, 58, 95, 0.13);
+    --grid-minor: rgba(30, 58, 95, 0.05);
+    --nav-bg: rgba(230, 235, 240, 0.88);
+    --backdrop: rgba(22, 25, 30, 0.45);
+    --focus-ring: #16191e;
+    --on-accent: #ffffff;
+    --unavailable: #ca2f3c;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #e6ebf0;
+  --bg-raised: #dbe2e9;
+  --bg-panel: #f4f6f8;
+  --border: rgba(30, 58, 95, 0.14);
+  --border-strong: rgba(30, 58, 95, 0.26);
+  --text: #16191e;
+  --text-dim: #475262;
+  --text-faint: #5b6676;
+
+  --orchestrator: 38 85% 31%; /* #92610C */
+  --product: 165 59% 30%; /* #1F7A63 */
+  --design: 320 68% 46%; /* #C52690 */
+  --mobile: 145 52% 32%; /* #277C4B */
+  --backend: 250 58% 59%; /* #6E5AD3 */
+  --frontend-web: 200 75% 36%; /* #1773A1 */
+  --devops: 221 14% 45%; /* #636D83 */
+  --qa: 15 78% 42%; /* #BF4118 */
+  --security: 355 62% 49%; /* #CA2F3C */
+  --compliance: 65 70% 26%; /* #697114 */
+  --analytics: 275 58% 54%; /* #9546CE */
+  --docs: 100 38% 34%; /* #4C7836 */
+
+  --grid-major: rgba(30, 58, 95, 0.13);
+  --grid-minor: rgba(30, 58, 95, 0.05);
+  --nav-bg: rgba(230, 235, 240, 0.88);
+  --backdrop: rgba(22, 25, 30, 0.45);
+  --focus-ring: #16191e;
+  --on-accent: #ffffff;
+  --unavailable: #ca2f3c;
 }
 
 * {
@@ -93,6 +178,37 @@ a {
     45px 60px;
 }
 
+/* Light theme swaps the constellation for a drafting grid: major lines
+   every 90px (same rhythm as the dark theme's dot grid), minor every 18px. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .stars {
+    background-image:
+      linear-gradient(var(--grid-major) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+      linear-gradient(var(--grid-minor) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+    background-size:
+      90px 90px,
+      90px 90px,
+      18px 18px,
+      18px 18px;
+    background-position: 0 0;
+  }
+}
+:root[data-theme="light"] .stars {
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+  background-size:
+    90px 90px,
+    90px 90px,
+    18px 18px,
+    18px 18px;
+  background-position: 0 0;
+}
+
 /* ---------- hero ---------- */
 .hero {
   position: relative;
@@ -127,13 +243,28 @@ a {
   color: var(--text);
   border-color: var(--border-strong);
 }
-.hero-lang-switch {
+.hero-controls {
   position: absolute;
   top: 20px;
   right: 20px;
+  display: flex;
+  gap: 8px;
 }
-.mini-nav-lang-switch {
+.mini-nav-controls {
   margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+}
+.theme-switch-placeholder {
+  display: block;
+  width: 14px;
+  height: 14px;
 }
 /* Single timeline for the hero intro, hand-tuned so every piece lands
    before the next starts:
@@ -323,8 +454,8 @@ a {
   margin-top: 28px;
   padding: 12px 22px;
   border-radius: 999px;
-  background: hsl(var(--orchestrator));
-  color: #0a0b0d;
+  background: hsl(var(--brand-amber));
+  color: #16191e;
   font-weight: 700;
   font-size: 14px;
   text-decoration: none;
@@ -377,7 +508,7 @@ a {
   justify-content: center;
   gap: 28px;
   padding: 13px 20px;
-  background: rgba(18, 20, 24, 0.82);
+  background: var(--nav-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   transform: translateY(-120%);
@@ -490,7 +621,7 @@ a {
 .card:focus-visible,
 .modal-close:focus-visible,
 .copy-btn:focus-visible {
-  outline: 3px solid #fff;
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -577,7 +708,7 @@ a {
   text-transform: uppercase;
 }
 .card-tag.is-unavailable {
-  color: hsl(355 70% 74%);
+  color: var(--unavailable);
   border-color: hsla(355, 62%, 50%, 0.4);
 }
 
@@ -585,7 +716,7 @@ a {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 5, 6, 0.72);
+  background: var(--backdrop);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -732,7 +863,7 @@ a {
 }
 .copy-btn {
   background: hsl(var(--card-accent));
-  color: #0a0b0d;
+  color: var(--on-accent);
   border: none;
   font-weight: 700;
   font-size: 13px;
@@ -743,6 +874,7 @@ a {
 }
 .copy-btn[data-copied="true"] {
   background: #2ecc71;
+  color: #0a0b0d;
 }
 
 .install-nudge {

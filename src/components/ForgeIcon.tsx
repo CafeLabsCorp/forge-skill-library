@@ -2,7 +2,7 @@ type ForgeIconProps = {
   className?: string;
 };
 
-// Forge mark: amber hexagon (brand color, matches --orchestrator exactly —
+// Forge mark: amber hexagon (brand color, matches --brand-amber exactly —
 // hsl(38 85% 58%) = #EFAC39) ringed by 6 hexagon petals in currentColor, so
 // they inherit --text instead of the source file's static dark fill, which
 // would nearly vanish against this site's dark-only background.
@@ -20,23 +20,23 @@ export function ForgeIcon({ className }: ForgeIconProps) {
     <svg viewBox="0 0 1265 1394" className={className} role="img" aria-label="Forge">
       <path
         className="forge-icon-hex"
-        fill="hsl(var(--orchestrator))"
+        fill="hsl(var(--brand-amber))"
         d="M660.036 253.414L1044.3 475.151V918.626L660.036 1140.36L275.774 918.626L275.774 475.151L660.036 253.414Z"
       />
       <g className="forge-icon-accents">
         <path
           className="forge-icon-accent-top"
-          fill="hsl(var(--orchestrator))"
+          fill="hsl(var(--brand-amber))"
           d="M961.782 110.633L1016.85 142.309V205.663L961.782 237.34L906.71 205.663V142.309L961.782 110.633Z"
         />
         <path
           className="forge-icon-accent-bottom"
-          fill="hsl(var(--orchestrator))"
+          fill="hsl(var(--brand-amber))"
           d="M962.012 1156.31L1017.08 1187.99V1251.34L962.012 1283.02L906.94 1251.34V1187.99L962.012 1156.31Z"
         />
         <path
           className="forge-icon-accent-left"
-          fill="hsl(var(--orchestrator))"
+          fill="hsl(var(--brand-amber))"
           d="M55.072 633.536L110.144 665.212V728.566L55.072 760.243L1.63513e-06 728.566L0 665.212L55.072 633.536Z"
         />
       </g>

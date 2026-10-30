@@ -80,5 +80,10 @@
   },
   "Footer": {
     "text": "Forge Skill Library — prompts sourced from the public Forge repository."
+  },
+  "ThemeToggle": {
+    "label": "Theme",
+    "toLight": "Switch to light theme",
+    "toDark": "Switch to dark theme"
   }
 }
