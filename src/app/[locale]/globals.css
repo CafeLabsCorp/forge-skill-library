@@ -24,6 +24,13 @@
   --compliance: 65 70% 55%;
   --analytics: 275 58% 66%;
   --docs: 100 38% 52%;
+  --creative-director: 295 60% 66%;
+  --content-strategist: 50 80% 55%;
+  --motion: 185 70% 50%;
+  --video-editor: 230 70% 68%;
+  --audio: 125 45% 55%;
+  --3d-artist: 335 70% 64%;
+  --media-qa: 8 55% 68%;
 
   --radius-card: 18px;
 
@@ -69,6 +76,13 @@
     --compliance: 65 70% 26%; /* #697114 */
     --analytics: 275 58% 54%; /* #9546CE */
     --docs: 100 38% 34%; /* #4C7836 */
+    --creative-director: 295 55% 40%;
+    --content-strategist: 45 85% 26%;
+    --motion: 185 75% 26%;
+    --video-editor: 230 60% 50%;
+    --audio: 125 45% 30%;
+    --3d-artist: 335 65% 42%;
+    --media-qa: 8 60% 40%;
 
     --grid-major: rgba(30, 58, 95, 0.13);
     --grid-minor: rgba(30, 58, 95, 0.05);

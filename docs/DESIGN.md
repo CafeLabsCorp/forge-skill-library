@@ -43,6 +43,13 @@ Each agent has its own accent color, stored as an HSL triplet (without the
 | Security       | `--security`           | `355 62% 50%` (red) |
 | Analytics      | `--analytics`          | `275 58% 66%` (purple) |
 | Docs           | `--docs`               | `100 38% 52%` (sage green) |
+| Creative Director | `--creative-director` | `295 60% 66%` |
+| Content Strategist | `--content-strategist` | `50 80% 55%` |
+| Motion         | `--motion` | `185 70% 50%` |
+| Video Editor   | `--video-editor` | `230 70% 68%` |
+| Audio          | `--audio` | `125 45% 55%` |
+| 3D Artist      | `--3d-artist` | `335 70% 64%` |
+| Media QA       | `--media-qa` | `8 55% 68%` |
 
 These colors become `--card-accent` (defined inline per component, never hardcoded in
 CSS) and drive: the card's border/glow on hover/focus, the "role" color on the card and modal,
@@ -85,7 +92,7 @@ starry-sky effect behind the wordmark.
 The most distinctive element of the identity: each `ready` agent has a portrait drawn
 as an SVG graph — nodes (`.fig-node`, circles) linked by edges (`.fig-edge`, lines),
 with all color inherited from `currentColor`/`--card-accent`.
-Implemented in `src/components/figures.tsx`. As of this round, 8 of the 12 agents have
+Implemented in `src/components/figures.tsx`. As of this round, 8 of the 19 agents have
 their own figure pair — `orchestrator`, `product`, `design`, `mobile`, `backend`,
 `frontend-web`, `devops`, `qa` (see `FACE_COMPONENTS`/`BODY_COMPONENTS` at the bottom of
 `figures.tsx`, and `docs/ARQUITETURA.md`'s "Data flow" section for how `ready` gates

@@ -43,6 +43,13 @@ função `hsl()`) para poder compor com opacidade via `hsl(var(--x) / <alpha>)`:
 | Security       | `--security`           | `355 62% 50%` (vermelho) |
 | Analytics      | `--analytics`          | `275 58% 66%` (roxo) |
 | Docs           | `--docs`               | `100 38% 52%` (verde-sálvia) |
+| Creative Director | `--creative-director` | `295 60% 66%` |
+| Content Strategist | `--content-strategist` | `50 80% 55%` |
+| Motion         | `--motion` | `185 70% 50%` |
+| Video Editor   | `--video-editor` | `230 70% 68%` |
+| Audio          | `--audio` | `125 45% 55%` |
+| 3D Artist      | `--3d-artist` | `335 70% 64%` |
+| Media QA       | `--media-qa` | `8 55% 68%` |
 
 Essas cores viram `--card-accent` (definida inline por componente, nunca hardcoded no
 CSS) e dirigem: borda/glow do card no hover/focus, cor do "role" no card e no modal,
@@ -85,7 +92,7 @@ de céu estrelado atrás do wordmark.
 O elemento mais distinto da identidade: cada agente `ready` tem um retrato desenhado
 como grafo SVG — nós (`.fig-node`, círculos) ligados por arestas (`.fig-edge`,
 linhas), toda a cor herdada de `currentColor`/`--card-accent`.
-Implementado em `src/components/figures.tsx`. Nesta rodada, 8 dos 12 agentes têm seu
+Implementado em `src/components/figures.tsx`. Nesta rodada, 8 dos 19 agentes têm seu
 próprio par de figuras — `orchestrator`, `product`, `design`, `mobile`, `backend`,
 `frontend-web`, `devops`, `qa` (ver `FACE_COMPONENTS`/`BODY_COMPONENTS` no fim de
 `figures.tsx`, e a seção "Fluxo de dados" de `docs/ARQUITETURA.pt-br.md` pra entender

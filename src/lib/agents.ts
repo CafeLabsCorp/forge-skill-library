@@ -62,7 +62,7 @@ type AgentConfig = {
 const AGENT_CONFIGS: AgentConfig[] = [
   { id: "orchestrator", num: "01", role: "Tech Lead / Coordinator", accentVar: "--orchestrator" },
   { id: "product", num: "02", role: "Brainstorm / Validation", accentVar: "--product" },
-  { id: "design", num: "03", role: "UX / UI", accentVar: "--design" },
+  { id: "design", num: "03", role: "Any Medium", accentVar: "--design" },
   { id: "mobile", num: "04", role: "Flutter Implementation", accentVar: "--mobile" },
   { id: "backend", num: "05", role: "Cloud Architect", accentVar: "--backend" },
   { id: "frontend-web", num: "06", role: "Web Implementation", accentVar: "--frontend-web" },
@@ -72,14 +72,23 @@ const AGENT_CONFIGS: AgentConfig[] = [
   { id: "compliance", num: "10", role: "Legal / Privacy / LGPD", accentVar: "--compliance" },
   { id: "analytics", num: "11", role: "Instrumentation", accentVar: "--analytics" },
   { id: "docs", num: "12", role: "Documentation", accentVar: "--docs" },
+  { id: "creative-director", num: "13", role: "Studio Lead", accentVar: "--creative-director" },
+  { id: "content-strategist", num: "14", role: "Content / Social", accentVar: "--content-strategist" },
+  { id: "motion", num: "15", role: "Motion Design", accentVar: "--motion" },
+  { id: "video-editor", num: "16", role: "Editing", accentVar: "--video-editor" },
+  { id: "audio", num: "17", role: "Sound", accentVar: "--audio" },
+  { id: "3d-artist", num: "18", role: "3D Modeling", accentVar: "--3d-artist" },
+  { id: "media-qa", num: "19", role: "Visual Review", accentVar: "--media-qa" },
 ];
 
 // Naive kebab-case -> Title Case can't know "qa" and "devops" are meant as
-// acronyms/compounds rather than ordinary words — these two display
+// acronyms/compounds rather than ordinary words — these display
 // overrides are the only exceptions to the otherwise-derived display name.
 const DISPLAY_NAME_OVERRIDES: Record<string, string> = {
   qa: "QA",
   devops: "DevOps",
+  "3d-artist": "3D Artist",
+  "media-qa": "Media QA",
 };
 
 function titleCase(id: string): string {
