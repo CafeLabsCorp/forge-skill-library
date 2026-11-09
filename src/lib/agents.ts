@@ -30,16 +30,13 @@ export type AgentCardData = {
   /** From the agent .md frontmatter `description:` field, or an
    * "unavailable" explanation if the fetch failed. */
   description: string;
-  /** True only for the one agent whose design + prompt are fully shipped
-   * this round (orchestrator) AND whose fetch succeeded. */
-  ready: boolean;
-  /** True if the build-time fetch for this agent failed. Independent of
-   * `ready` — even the ready agent can end up unavailable if GitHub is
-   * unreachable at build time. */
+  /** True if the build-time fetch for this agent failed (e.g. GitHub
+   * unreachable at build time). Whether an agent has a hand-drawn portrait
+   * is independent of this and of showing its prompt: the prompt is shown
+   * for every agent whose fetch succeeded. */
   unavailable: boolean;
   /** Full raw file content (frontmatter + body), exactly as it lives in the
-   * repo — this is what gets shown/copied in the modal for the ready
-   * agent, since that's the literal content someone would paste as the
+   * repo — this is what gets shown/copied in the modal, since that's the literal content someone would paste as the
    * subagent definition. */
   content: string | null;
   /** Path shown in the prompt toolbar, e.g. "agents/orchestrator.md". */
@@ -128,15 +125,6 @@ async function fetchAgent(config: AgentConfig): Promise<AgentCardData> {
       // display name is consistently derived rather than hand-written.
       name: titleCase(parsed.name),
       description: parsed.description,
-      ready:
-        config.id === "orchestrator" ||
-        config.id === "product" ||
-        config.id === "design" ||
-        config.id === "mobile" ||
-        config.id === "backend" ||
-        config.id === "frontend-web" ||
-        config.id === "devops" ||
-        config.id === "qa",
       unavailable: false,
       content: raw.trim(),
       sourcePath,
@@ -150,7 +138,6 @@ async function fetchAgent(config: AgentConfig): Promise<AgentCardData> {
       name: titleCase(config.id),
       description:
         "This agent's content could not be fetched from the Forge repository at build time.",
-      ready: false,
       unavailable: true,
       content: null,
       sourcePath,

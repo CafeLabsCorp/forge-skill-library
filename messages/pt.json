@@ -25,14 +25,10 @@
   "Card": {
     "viewProfile": "Ver perfil de {name}",
     "viewProfileUnavailable": "Ver perfil de {name} (conteúdo indisponível)",
-    "viewProfileNotReady": "Ver perfil de {name} (ainda não desenhado)",
-    "tagSoon": "Em breve",
     "tagUnavailable": "Indisponível"
   },
   "Modal": {
     "close": "Fechar",
-    "notDesignedYetIntro": "{name} ainda não foi desenhado.",
-    "notDesignedYetBody": "Esta etapa entrega a gramática visual compartilhada mais {readyCount, plural, one {# agente totalmente realizado} other {# agentes totalmente realizados}} ({readyNames}) do início ao fim. Os {remainingCount} restantes — incluindo {name} — vêm de forma incremental, cada um com sua própria pose e cor desenhadas à mão, não um template recolorido.",
     "unavailableCopy": "Não conseguimos carregar o prompt de {name} do repositório do Forge no momento do build. Ainda dá pra ver o arquivo-fonte direto no <link>GitHub</link>.",
     "installNudge": "Isso é 1 especialista. Quer os {count} trabalhando juntos, automaticamente?",
     "installNudgeCta": "Instalar →"

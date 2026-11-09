@@ -699,12 +699,10 @@ a {
   -webkit-box-orient: vertical;
 }
 
-.card.is-locked,
 .card.is-unavailable {
   cursor: pointer;
   opacity: 0.55;
 }
-.card.is-locked .card-photo svg,
 .card.is-unavailable .card-photo svg {
   opacity: 0.8;
 }

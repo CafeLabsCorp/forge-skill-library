@@ -1585,11 +1585,9 @@ const READY_BODIES: Record<string, () => JSX.Element> = {
   qa: QABody,
 };
 
-/** Looks up the card/modal figure components for a given agent id. Callers
- * should only use the returned components when `agent.ready` is true —
- * unready/unavailable agents render `SeedGraph` instead (see AgentCard /
- * AgentModal). Kept here, next to the components themselves, so adding the
- * next ready agent's figures is a one-line addition to these two maps. */
+/** Looks up the card/modal figure components for a given agent id; callers fall back to `SeedGraph` when an id has no figure (see AgentCard /
+ * AgentModal). Kept here, next to the components themselves, so adding an
+ * agent's figures is a one-line addition to these two maps. */
 export function getReadyFigures(id: string): {
   Face: (() => JSX.Element) | undefined;
   Body: (() => JSX.Element) | undefined;

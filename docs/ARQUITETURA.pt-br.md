@@ -37,14 +37,10 @@ Mecânica (`getAgents()` em `src/lib/agents.ts`):
    próprio try/catch): se a busca de um agente falhar (rede, 404, frontmatter ausente ou
    mal formado), só aquele card vira "Unavailable" — não derruba o build nem a página
    inteira.
-5. Independente da busca, cada agente tem uma flag `ready` decidida aqui neste repo
-   (atualmente hardcoded em `fetchAgent`, `src/lib/agents.ts`, para `orchestrator`,
-   `product`, `design`, `mobile`, `backend`, `frontend-web`, `devops` e `qa` — 8 dos 12
-   agentes listados em `AGENT_CONFIGS`; `security`, `compliance`, `analytics` e `docs`
-   ainda não estão prontos) — controla se o card mostra a tag "Soon" e se o modal
-   mostra o prompt completo ou uma mensagem de "ainda não desenhado". Um agente pode ter
-   `ready: true` e ainda assim aparecer como indisponível se a busca falhar no momento do
-   build (`unavailable` é independente de `ready`).
+5. Não existe mais a trava "ready": todo agente cuja busca dá certo mostra o prompt completo e
+   um `CopyButton`, sem tag "Soon". Ter um retrato desenhado é só questão visual (ver
+   `figures.tsx`): quem não tem renderiza um `SeedGraph` genérico na cor do agente. Só uma
+   busca que falha deixa o agente `unavailable`.
 
 **Implicação prática**: renomear um agente, mudar seu path em `agents/` ou mudar o
 formato do frontmatter no repo `forge` pode quebrar o fetch ou derrubar o card para
@@ -58,7 +54,7 @@ prompts com mais frequência).
 ## Rastro ponta a ponta: visualizar e copiar o prompt do Orchestrator
 
 Uma passagem concreta por cada camada, do build time até um clique no navegador,
-usando o agente `orchestrator` como exemplo (ele é `ready`, então exercita o caminho
+usando o agente `orchestrator` como exemplo (ele tem retrato, então exercita o caminho
 completo em vez dos fallbacks "unavailable"/"não desenhado ainda"):
 
 1. **Build time, servidor** — `getAgents()` (`src/lib/agents.ts`) itera
@@ -70,13 +66,12 @@ completo em vez dos fallbacks "unavailable"/"não desenhado ainda"):
    do frontmatter YAML do arquivo; `titleCase(parsed.name)` transforma o
    `orchestrator` kebab-case no nome de exibição `"Orchestrator"`. O texto bruto
    completo do arquivo (frontmatter + corpo do prompt) é guardado literalmente como
-   `content`. A função retorna um `AgentCardData` com `ready: true` (orchestrator está
-   na lista hardcoded de prontos) e `unavailable: false`.
+   `content`. A função retorna um `AgentCardData` com `unavailable: false`.
 3. `src/app/[locale]/page.tsx` (um Server Component `async`) chama `getAgents()` uma
    vez por requisição/build e passa o array resultante como `agents` para
    `<AgentGallery agents={agents} />`.
 4. **Render** — `AgentGallery` (client component) mapeia cada `AgentCardData` para um
-   `<AgentCard agent={...} />`. Como `agent.ready` é verdadeiro, `AgentCard` busca
+   `<AgentCard agent={...} />`. Como o orchestrator tem retrato, `AgentCard` busca
    `OrchestratorFace` no mapa de componentes de rosto (`src/components/figures.tsx`) e
    o renderiza como o retrato do card, junto com id, nome, role e uma descrição
    truncada em 2 linhas; nenhuma tag "Soon"/"Unavailable" é mostrada.
@@ -86,7 +81,7 @@ completo em vez dos fallbacks "unavailable"/"não desenhado ainda"):
    compartilhado com `agent={openAgent}` e `isOpen={true}`.
 6. `AgentModal` (client component) trava o foco, move-o pro botão de fechar, renderiza
    `OrchestratorBody` (a figura de corpo inteiro) ao lado do nome/role do agente e —
-   como `ready && content` são ambos verdadeiros — renderiza a string `content` bruta
+   como `content` existe — renderiza a string `content` bruta
    completa dentro de `.prompt-body` (monoespaçada) junto com um
    `<CopyButton text={content} />`.
 7. Clicar em "Copy" roda o handler do `CopyButton`: primeiro tenta
@@ -141,25 +136,22 @@ passos de instalação, rodapé, microcópia de card/modal (tags, aria-labels, m
 estado). **Nome, papel e descrição de cada agente permanecem sempre em inglês**,
 independente do locale ativo — são conteúdo técnico buscado em `src/lib/agents.ts` do
 repo público `forge` (ver seção "Fluxo de dados" acima), não texto de página que este
-site possua ou deva traduzir. A lista de nomes de agentes "prontos" mostrada no modal
-(`AgentModal.tsx`) usa `Intl.ListFormat` pra gerar a conjunção ("A, B and C" / "A, B e
-C") localizada corretamente sem hardcodar o conectivo.
+site possua ou deva traduzir. O prompt em si fica no idioma original.
 
 ## Componentes
 
 - **`AgentGallery`** (`components/AgentGallery.tsx`, client component) — dono do estado
   `openAgent`; renderiza a lista de `AgentCard` e o único `AgentModal` compartilhado.
-- **`AgentCard`** (`components/AgentCard.tsx`) — um card por agente: foto (SVG "Face" se
-  `ready`, ou `SeedGraph` genérico caso contrário), id, nome, tag ("Soon"/"Unavailable"
+- **`AgentCard`** (`components/AgentCard.tsx`) — um card por agente: foto (SVG "Face" se o
+  agente tem uma, ou `SeedGraph` genérico caso contrário), id, nome, tag ("Unavailable"
   quando aplicável), role e descrição truncada em 2 linhas. É um `<button>` que abre o
   modal ao clicar.
 - **`AgentModal`** (`components/AgentModal.tsx`, client component) — dialog de detalhe.
   Fica sempre montado no DOM (visibilidade controlada por estado `hidden`/`isOpen`, não
   por montagem condicional) para permitir cross-fade de abertura/fechamento; implementa
   foco inicial no botão fechar, focus trap por Tab/Shift+Tab e fechamento por Esc ou
-  clique no backdrop. Mostra o prompt completo + `CopyButton` quando `ready && content`
-  existem; caso contrário mostra uma mensagem explicando por que não ("ainda não
-  desenhado" vs. "não foi possível buscar do GitHub", com link direto pro arquivo no
+  clique no backdrop. Mostra o prompt completo + `CopyButton` quando `content`
+  existe; caso contrário mostra uma mensagem de "não foi possível buscar do GitHub", com link direto pro arquivo no
   GitHub como fallback).
 - **`LanguageSwitcher`** (`components/LanguageSwitcher.tsx`, client component) — botão
   que alterna pro outro locale (`en`↔`pt`) preservando a rota atual (`useRouter`/
@@ -185,10 +177,10 @@ C") localizada corretamente sem hardcodar o conectivo.
   asset separado e mais simples que vive fora do segmento `[locale]` pra não ficar
   prefixado por locale — ver `docs/DESIGN.md`).
 - **`figures.tsx`** — sistema compartilhado de "figuras" SVG (grafos de nós/arestas) que
-  dá a cada agente pronto (`orchestrator`, `product`, `design`) um retrato desenhado à
+  dá aos agentes que têm um (`orchestrator`, `product`, `design` e outros) um retrato desenhado à
   mão (versão pequena "Face" pro card, versão de corpo inteiro "Body" pro modal), mais um
   `SeedGraph` genérico determinístico (por índice, não aleatório — evita divergência
-  entre render de servidor e cliente) usado para os agentes ainda não prontos. As
+  entre render de servidor e cliente) usado para os agentes que ainda não têm retrato. As
   coordenadas dos grafos foram portadas 1:1 de mockups validados fora do repo (comentado
   no topo do arquivo); ver `docs/DESIGN.pt-br.md` para a lógica visual por trás.
 
@@ -202,9 +194,7 @@ C") localizada corretamente sem hardcodar o conectivo.
 - **Falha parcial, não falha total.** O isolamento por agente (`Promise.all` com
   try/catch individual) é uma escolha explícita para que uma instabilidade pontual do
   GitHub raw content não derrube a página toda — só degrada o(s) card(s) afetado(s).
-- **`ready` é um interruptor manual neste repo, não uma propriedade do agente no repo
-  `forge`.** Hoje 8 dos 12 agentes estão marcados como prontos (`orchestrator`,
-  `product`, `design`, `mobile`, `backend`, `frontend-web`, `devops`, `qa`); os 4
-  restantes (`security`, `compliance`, `analytics`, `docs`) existem no
-  Forge mas ainda não têm o tratamento visual (figura própria) nem foram "aprovados" para
-  mostrar o prompt completo aqui.
+- **Retrato é opcional; prompt não é.** 8 dos 19 agentes têm figura desenhada
+  (`orchestrator`, `product`, `design`, `mobile`, `backend`, `frontend-web`, `devops`, `qa`); os
+  outros 11 usam o `SeedGraph` genérico. A falta de retrato nunca esconde o prompt, porque o
+  prompt é o produto.

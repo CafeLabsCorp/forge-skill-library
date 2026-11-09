@@ -37,14 +37,10 @@ Mechanics (`getAgents()` in `src/lib/agents.ts`):
    own try/catch): if one agent's fetch fails (network, 404, missing or malformed
    frontmatter), only that card becomes "Unavailable" — it doesn't take down the build
    or the whole page.
-5. Regardless of the fetch outcome, each agent has a `ready` flag decided here in this repo
-   (currently hardcoded in `fetchAgent`, `src/lib/agents.ts`, for `orchestrator`, `product`,
-   `design`, `mobile`, `backend`, `frontend-web`, `devops`, and `qa` — 8 of the 12 agents
-   listed in `AGENT_CONFIGS`; `security`, `compliance`, `analytics`, and `docs` are not yet
-   ready) — it controls whether the card shows the "Soon" tag and
-   whether the modal shows the full prompt or a "not yet designed" message. An agent can have
-   `ready: true` and still show up as unavailable if the fetch fails at
-   build time (`unavailable` is independent from `ready`).
+5. There is no "ready" gate: every agent whose fetch succeeds shows its full prompt and a
+   `CopyButton`, with no "Soon" tag. Having a hand-drawn portrait is a purely visual matter
+   (see `figures.tsx`): agents without one render a generic `SeedGraph` in their accent color.
+   Only a failed fetch makes an agent `unavailable`.
 
 **Practical implication**: renaming an agent, changing its path under `agents/`, or changing the
 frontmatter format in the `forge` repo can break the fetch or drop the card to
@@ -58,7 +54,7 @@ prompts more frequently).
 ## End-to-end trace: viewing and copying the Orchestrator's prompt
 
 One concrete pass through every layer, from build time to a click in the browser,
-using the `orchestrator` agent as the example (it's `ready`, so it exercises the
+using the `orchestrator` agent as the example (it has a portrait, so it exercises the
 full path rather than the "unavailable"/"not yet designed" fallbacks):
 
 1. **Build time, server** — `getAgents()` (`src/lib/agents.ts`) iterates
@@ -70,13 +66,12 @@ full path rather than the "unavailable"/"not yet designed" fallbacks):
    the file's YAML frontmatter; `titleCase(parsed.name)` turns the kebab-case
    `orchestrator` into the display name `"Orchestrator"`. The full raw file text
    (frontmatter + prompt body) is kept verbatim as `content`. The function returns an
-   `AgentCardData` with `ready: true` (orchestrator is in the hardcoded ready list) and
-   `unavailable: false`.
+   `AgentCardData` with `unavailable: false`.
 3. `src/app/[locale]/page.tsx` (an `async` Server Component) calls `getAgents()` once
    per request/build and passes the resulting array as `agents` to
    `<AgentGallery agents={agents} />`.
 4. **Render** — `AgentGallery` (client component) maps each `AgentCardData` to an
-   `<AgentCard agent={...} />`. Because `agent.ready` is true, `AgentCard` looks up
+   `<AgentCard agent={...} />`. Because the orchestrator has a portrait, `AgentCard` looks up
    `OrchestratorFace` in the face-component map (`src/components/figures.tsx`) and
    renders it as the card's portrait, alongside the id, name, role, and a
    2-line-truncated description; no "Soon"/"Unavailable" tag is shown.
@@ -86,7 +81,7 @@ full path rather than the "unavailable"/"not yet designed" fallbacks):
    with `agent={openAgent}` and `isOpen={true}`.
 6. `AgentModal` (client component) traps focus, moves it to its close button, renders
    `OrchestratorBody` (the full-body figure) next to the agent's name/role, and —
-   because `ready && content` are both truthy — renders the full raw `content` string
+   because `content` exists — renders the full raw `content` string
    inside `.prompt-body` (monospace) together with a `<CopyButton text={content} />`.
 7. Clicking "Copy" runs `CopyButton`'s handler: it first tries
    `navigator.clipboard.writeText(content)`; if that throws (e.g. an insecure context
@@ -139,25 +134,22 @@ install steps, footer, card/modal microcopy (tags, aria-labels, state
 messages). **Each agent's name, role, and description always stay in English**,
 regardless of the active locale — they are technical content fetched by `src/lib/agents.ts` from the
 public `forge` repo (see "Data flow" above), not page copy that this
-site owns or should translate. The list of "ready" agent names shown in the modal
-(`AgentModal.tsx`) uses `Intl.ListFormat` to produce the conjunction ("A, B and C" / "A, B e
-C") correctly localized without hardcoding the connective.
+site owns or should translate. The prompt itself stays in its original language.
 
 ## Components
 
 - **`AgentGallery`** (`components/AgentGallery.tsx`, client component) — owns the
   `openAgent` state; renders the list of `AgentCard`s and the single shared `AgentModal`.
-- **`AgentCard`** (`components/AgentCard.tsx`) — one card per agent: portrait (SVG "Face" if
-  `ready`, or a generic `SeedGraph` otherwise), id, name, tag ("Soon"/"Unavailable"
+- **`AgentCard`** (`components/AgentCard.tsx`) — one card per agent: portrait (SVG "Face" when the agent has
+  one, or a generic `SeedGraph` otherwise), id, name, tag ("Unavailable"
   when applicable), role, and a description truncated to 2 lines. It's a `<button>` that opens the
   modal on click.
 - **`AgentModal`** (`components/AgentModal.tsx`, client component) — the detail dialog.
   It stays mounted in the DOM at all times (visibility controlled by a `hidden`/`isOpen` state, not
   conditional mounting) to allow an open/close cross-fade; it implements
   initial focus on the close button, a Tab/Shift+Tab focus trap, and closing via Esc or
-  a backdrop click. It shows the full prompt + `CopyButton` when `ready && content`
-  exist; otherwise it shows a message explaining why not ("not yet
-  designed" vs. "could not fetch from GitHub", with a direct link to the file on
+  a backdrop click. It shows the full prompt + `CopyButton` when `content`
+  exists; otherwise it shows a message explaining that the file "could not be fetched from GitHub", with a direct link to the file on
   GitHub as a fallback).
 - **`LanguageSwitcher`** (`components/LanguageSwitcher.tsx`, client component) — a button
   that switches to the other locale (`en`↔`pt`) while preserving the current route (`useRouter`/
@@ -182,10 +174,10 @@ C") correctly localized without hardcoding the connective.
   `src/app/icon.svg`, the favicon/browser-tab icon (a separate, simpler asset that lives
   outside the `[locale]` segment so it isn't locale-prefixed — see `docs/DESIGN.md`).
 - **`figures.tsx`** — a shared system of SVG "figures" (node/edge graphs) that
-  gives each ready agent (`orchestrator`, `product`, `design`) a hand-drawn
+  gives the agents that have one a hand-drawn
   portrait (a small "Face" version for the card, a full-body "Body" version for the modal), plus a
   deterministic generic `SeedGraph` (keyed by index, not random — avoiding a mismatch
-  between server and client rendering) used for the agents that aren't ready yet. The
+  between server and client rendering) used for the agents that don't have a portrait yet. The
   graph coordinates were ported 1:1 from mockups validated outside the repo (noted in a comment
   at the top of the file); see `docs/DESIGN.md` for the visual logic behind them.
 
@@ -199,9 +191,7 @@ C") correctly localized without hardcoding the connective.
 - **Partial failure, not total failure.** Per-agent isolation (`Promise.all` with
   individual try/catch) is an explicit choice so that a temporary GitHub raw content
   instability doesn't take down the whole page — it only degrades the affected card(s).
-- **`ready` is a manual switch in this repo, not a property of the agent in the
-  `forge` repo.** Today 8 of the 12 agents are marked as ready (`orchestrator`,
-  `product`, `design`, `mobile`, `backend`, `frontend-web`, `devops`, `qa`); the
-  remaining 4 (`security`, `compliance`, `analytics`, `docs`) exist in
-  Forge but don't yet have the visual treatment (a dedicated figure) nor have been "approved" to
-  show the full prompt here.
+- **Portraits are optional; prompts are not.** 8 of the 19 agents have a hand-drawn figure
+  (`orchestrator`, `product`, `design`, `mobile`, `backend`, `frontend-web`, `devops`, `qa`); the
+  other 11 use the generic `SeedGraph`. A missing portrait never hides the prompt, because
+  the prompt is the product.

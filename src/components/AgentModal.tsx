@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { AgentCardData } from "@/lib/agents";
 import { getReadyFigures, SeedGraph } from "./figures";
 import { CopyButton } from "./CopyButton";
@@ -29,11 +29,7 @@ export function AgentModal({
    * visibility, kept deliberately independent from `agent` so closing can
    * cross-fade instead of unmounting mid-animation. */
   agent: AgentCardData | null;
-  /** Full roster, used only to derive the ready/remaining counts (and
-   * ready agents' names) shown in the not-designed-yet copy below — so
-   * that copy self-updates as more agents ship `ready: true` in
-   * `lib/agents.ts`, instead of going stale like the hardcoded "one agent
-   * (Orchestrator)... the remaining nine" copy it replaced. */
+  /** Full roster, used for the agent count in the install nudge. */
   agents: AgentCardData[];
   onClose: () => void;
 }) {
@@ -44,7 +40,6 @@ export function AgentModal({
   // orchestrator delegates...") rather than something a visitor reads to
   // understand the role.
   const tBlurb = useTranslations("AgentBlurbs");
-  const locale = useLocale();
   const [renderedAgent, setRenderedAgent] = useState<AgentCardData | null>(null);
   const [hidden, setHidden] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -207,15 +202,8 @@ export function AgentModal({
     "--card-accent": `var(${renderedAgent?.accentVar ?? "--orchestrator"})`,
   };
 
-  const showPrompt = Boolean(renderedAgent?.ready && renderedAgent.content);
+  const showPrompt = Boolean(renderedAgent?.content);
   const { Body } = getReadyFigures(renderedAgent?.id ?? "");
-
-  const readyAgents = agents.filter((a) => a.ready);
-  const readyCount = readyAgents.length;
-  const remainingCount = agents.length - readyCount;
-  const readyNames = new Intl.ListFormat(locale, { style: "long", type: "conjunction" }).format(
-    readyAgents.map((a) => a.name),
-  );
 
   function handleCopied() {
     setShowInstallNudge(true);
@@ -255,7 +243,7 @@ export function AgentModal({
         <div className="modal-figure">
           {renderedAgent ? (
             <div key={openToken}>
-              {renderedAgent.ready && Body ? <Body /> : <SeedGraph seed={9} />}
+              {Body ? <Body /> : <SeedGraph seed={Number.parseInt(renderedAgent.num, 10) || 0} />}
             </div>
           ) : null}
         </div>
@@ -301,19 +289,7 @@ export function AgentModal({
                     ),
                   })}
                 </p>
-              ) : (
-                <p className="prompt-empty">
-                  {t("notDesignedYetIntro", { name: renderedAgent.name })}
-                  <br />
-                  <br />
-                  {t("notDesignedYetBody", {
-                    name: renderedAgent.name,
-                    readyCount,
-                    remainingCount,
-                    readyNames,
-                  })}
-                </p>
-              )}
+              ) : null}
             </div>
           ) : (
             <div className="prompt-body" />

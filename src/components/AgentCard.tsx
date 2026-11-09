@@ -21,13 +21,11 @@ export function AgentCard({
   const tBlurb = useTranslations("AgentBlurbs");
   const { Face } = getReadyFigures(agent.id);
   const blurb = tBlurb.has(agent.id) ? tBlurb(agent.id) : agent.description;
-  const stateClass = agent.unavailable ? " is-unavailable" : !agent.ready ? " is-locked" : "";
-  const tag = agent.unavailable ? t("tagUnavailable") : !agent.ready ? t("tagSoon") : null;
+  const stateClass = agent.unavailable ? " is-unavailable" : "";
+  const tag = agent.unavailable ? t("tagUnavailable") : null;
   const ariaLabel = agent.unavailable
     ? t("viewProfileUnavailable", { name: agent.name })
-    : !agent.ready
-      ? t("viewProfileNotReady", { name: agent.name })
-      : t("viewProfile", { name: agent.name });
+    : t("viewProfile", { name: agent.name });
 
   return (
     <li>
@@ -40,7 +38,7 @@ export function AgentCard({
         onClick={() => onOpen(agent)}
       >
         <span className="card-photo">
-          {agent.ready && Face ? <Face /> : <SeedGraph seed={seed} />}
+          {Face ? <Face /> : <SeedGraph seed={seed} />}
         </span>
         <span className="card-body">
           <span className="card-id">N.{agent.num}</span>

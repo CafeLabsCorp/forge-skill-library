@@ -89,14 +89,14 @@ starry-sky effect behind the wordmark.
 
 ## SVG figure system (per-agent portraits)
 
-The most distinctive element of the identity: each `ready` agent has a portrait drawn
+The most distinctive element of the identity: each agent with a figure has a portrait drawn
 as an SVG graph — nodes (`.fig-node`, circles) linked by edges (`.fig-edge`, lines),
 with all color inherited from `currentColor`/`--card-accent`.
 Implemented in `src/components/figures.tsx`. As of this round, 8 of the 19 agents have
 their own figure pair — `orchestrator`, `product`, `design`, `mobile`, `backend`,
 `frontend-web`, `devops`, `qa` (see `FACE_COMPONENTS`/`BODY_COMPONENTS` at the bottom of
-`figures.tsx`, and `docs/ARQUITETURA.md`'s "Data flow" section for how `ready` gates
-which agents get one).
+`figures.tsx`, and `docs/ARQUITETURA.md`'s "Data flow" section; the other 11 agents use the generic
+`SeedGraph` until they get one, and still show their full prompt).
 
 - **Face** (small, ~10–14 nodes) — used on the gallery card, cropped at the shoulders.
 - **Body** (full body, 28–34 nodes) — used in the modal, with 2 or 4 animated "arms"

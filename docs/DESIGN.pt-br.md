@@ -89,14 +89,14 @@ de céu estrelado atrás do wordmark.
 
 ## Sistema de figuras SVG (retratos por agente)
 
-O elemento mais distinto da identidade: cada agente `ready` tem um retrato desenhado
+O elemento mais distinto da identidade: cada agente com figura tem um retrato desenhado
 como grafo SVG — nós (`.fig-node`, círculos) ligados por arestas (`.fig-edge`,
 linhas), toda a cor herdada de `currentColor`/`--card-accent`.
 Implementado em `src/components/figures.tsx`. Nesta rodada, 8 dos 19 agentes têm seu
 próprio par de figuras — `orchestrator`, `product`, `design`, `mobile`, `backend`,
 `frontend-web`, `devops`, `qa` (ver `FACE_COMPONENTS`/`BODY_COMPONENTS` no fim de
-`figures.tsx`, e a seção "Fluxo de dados" de `docs/ARQUITETURA.pt-br.md` pra entender
-como `ready` decide quais agentes ganham uma).
+`figures.tsx`, e a seção "Fluxo de dados" de `docs/ARQUITETURA.pt-br.md`; os outros 11 agentes usam o
+`SeedGraph` genérico até ganharem uma, e mostram o prompt completo do mesmo jeito).
 
 - **Face** (pequena, ~10–14 nós) — usada no card da galeria, cortada nos ombros.
 - **Body** (corpo inteiro, 28–34 nós) — usada no modal, com 2 ou 4 "braços" animados
